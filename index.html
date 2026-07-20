@@ -1,10 +1,320 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Onsano</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onsano — An AI layer for hospital work</title>
+<meta name="description" content="Onsano is building an AI layer that understands the information hospitals already have, and carries the routine work between their systems.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232E7D5C'/%3E%3Ccircle cx='32' cy='32' r='13' fill='none' stroke='%23F9FBF8' stroke-width='7'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F9FBF8;      /* gauze white */
+    --ink:#16261E;        /* spruce ink */
+    --ink-soft:#55685E;   /* sage */
+    --green:#2E7D5C;      /* theater green */
+    --green-deep:#1F5C43;
+    --tint:#EAF2EC;       /* saline */
+    --line:#DEE7E1;       /* mist */
+    --col:41.25rem;       /* 660px column */
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Atkinson Hyperlegible",system-ui,-apple-system,sans-serif;
+    font-size:1.0625rem;
+    line-height:1.68;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  ::selection{background:var(--green);color:var(--paper)}
+  .wrap{max-width:var(--col);margin:0 auto;padding:0 1.5rem}
+
+  /* ---------- links & focus ---------- */
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:2px}
+  .textlink{
+    color:var(--green-deep);
+    text-decoration:none;
+    background-image:linear-gradient(var(--green-deep),var(--green-deep));
+    background-repeat:no-repeat;
+    background-size:100% 1px;
+    background-position:0 100%;
+    transition:background-size .25s ease,color .2s ease;
+  }
+  .textlink:hover{background-size:0% 1px;color:var(--green)}
+
+  /* ---------- nav ---------- */
+  .nav{padding:1.75rem 0}
+  .nav .wrap{display:flex;align-items:baseline;justify-content:space-between}
+  .wordmark{
+    font-family:"Newsreader",serif;
+    font-optical-sizing:auto;
+    font-weight:500;
+    font-size:1.45rem;
+    letter-spacing:-0.01em;
+    text-decoration:none;
+    color:var(--ink);
+  }
+  .wordmark .o{color:var(--green)}
+  .nav-contact{
+    font-size:.85rem;
+    font-weight:700;
+    letter-spacing:.02em;
+    color:var(--ink-soft);
+    text-decoration:none;
+    border-bottom:1px solid var(--line);
+    padding-bottom:2px;
+    transition:color .2s ease,border-color .2s ease;
+  }
+  .nav-contact:hover{color:var(--green-deep);border-color:var(--green)}
+
+  /* ---------- shared section rhythm ---------- */
+  .section{padding:4.5rem 0 0}
+  .label{
+    display:block;
+    font-size:.72rem;
+    font-weight:700;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--green);
+    margin-bottom:1.1rem;
+  }
+  .section p{max-width:38rem}
+  .section p + p{margin-top:1rem}
+
+  /* ---------- hero ---------- */
+  .hero{padding:4.5rem 0 0}
+  .hero h1{
+    font-family:"Newsreader",serif;
+    font-optical-sizing:auto;
+    font-weight:400;
+    font-size:clamp(2.35rem,6.4vw,3.8rem);
+    line-height:1.07;
+    letter-spacing:-0.018em;
+    max-width:15em;
+  }
+  .hero h1 em{font-style:italic;font-weight:400;color:var(--green-deep)}
+  .hero .lede{
+    margin-top:1.6rem;
+    font-size:1.125rem;
+    color:var(--ink-soft);
+    max-width:36rem;
+  }
+
+  /* ---------- signature: the thread between systems ---------- */
+  .thread{margin:3.75rem 0 0}
+  .thread svg{display:block;width:100%;height:auto}
+  .thread .block{
+    fill:var(--tint);
+    stroke:var(--line);
+    stroke-width:1.5;
+    opacity:0;
+    animation:appear .6s ease forwards;
+  }
+  .thread rect:nth-of-type(2){animation-delay:.08s}
+  .thread rect:nth-of-type(3){animation-delay:.16s}
+  .thread rect:nth-of-type(4){animation-delay:.24s}
+  .thread rect:nth-of-type(5){animation-delay:.32s}
+  .thread .path{
+    fill:none;
+    stroke:var(--green);
+    stroke-width:2.5;
+    stroke-linecap:round;
+    stroke-dasharray:1;
+    stroke-dashoffset:1;
+    animation:draw 1.7s cubic-bezier(.4,0,.2,1) .45s forwards;
+  }
+  .thread .dot{
+    fill:var(--green);
+    opacity:0;
+    animation:appear .4s ease 2.05s forwards;
+  }
+  .thread-caption{
+    margin-top:.9rem;
+    color:var(--ink-soft);
+    font-style:italic;
+    font-family:"Newsreader",serif;
+    font-size:.95rem;
+  }
+  @keyframes draw{to{stroke-dashoffset:0}}
+  @keyframes appear{to{opacity:1}}
+
+  /* ---------- principles ---------- */
+  .principles{margin-top:.5rem;list-style:none}
+  .principles li{
+    padding:1.6rem 0;
+    border-top:1px solid var(--line);
+    display:grid;
+    grid-template-columns:minmax(11rem,14rem) 1fr;
+    gap:1.5rem;
+    align-items:baseline;
+  }
+  .principles li:last-child{border-bottom:1px solid var(--line)}
+  .principles h3{
+    font-family:"Newsreader",serif;
+    font-optical-sizing:auto;
+    font-weight:500;
+    font-size:1.3rem;
+    letter-spacing:-0.01em;
+  }
+  .principles h3::before{
+    content:"";
+    display:inline-block;
+    width:.45em;height:.45em;
+    border-radius:50%;
+    background:var(--green);
+    margin-right:.55em;
+    transform:translateY(-.1em);
+    transition:transform .25s ease;
+  }
+  .principles li:hover h3::before{transform:translateY(-.1em) scale(1.5)}
+  .principles p{color:var(--ink-soft);font-size:1rem}
+
+  /* ---------- contact ---------- */
+  .contact-card{
+    margin-top:1.9rem;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:1.1rem;
+  }
+  .btn{
+    display:inline-block;
+    background:var(--green);
+    color:var(--paper);
+    font-weight:700;
+    font-size:.95rem;
+    letter-spacing:.01em;
+    text-decoration:none;
+    padding:.85rem 1.5rem;
+    border-radius:999px;
+    transition:background .2s ease,transform .2s ease;
+  }
+  .btn:hover{background:var(--green-deep);transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  .contact-note{font-size:.9rem;color:var(--ink-soft)}
+
+  /* ---------- footer ---------- */
+  .footer{margin-top:5.5rem;border-top:1px solid var(--line);padding:1.6rem 0 2.4rem}
+  .footer .wrap{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    gap:.75rem 1.5rem;
+    font-size:.82rem;
+    color:var(--ink-soft);
+  }
+  .footer nav{display:flex;gap:1.25rem}
+  .footer a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:1px;transition:color .2s ease,border-color .2s ease}
+  .footer a:hover{color:var(--green-deep);border-color:var(--green)}
+
+  /* ---------- entrance ---------- */
+  .rise{opacity:0;transform:translateY(10px);animation:rise .65s ease forwards}
+  .d1{animation-delay:.05s}.d2{animation-delay:.15s}.d3{animation-delay:.25s}
+  @keyframes rise{to{opacity:1;transform:none}}
+
+  /* ---------- small screens ---------- */
+  @media (max-width:38rem){
+    .principles li{grid-template-columns:1fr;gap:.4rem}
+    .section{padding-top:3.5rem}
+    .hero{padding-top:3rem}
+  }
+
+  /* ---------- reduced motion ---------- */
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .rise,.thread .block,.thread .dot{animation:none;opacity:1;transform:none}
+    .thread .path{animation:none;stroke-dashoffset:0}
+    .btn:hover{transform:none}
+  }
+</style>
 </head>
 <body>
-    <h1>Onsano</h1>
-    <p>Building AI for healthcare.</p>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="wordmark" href="#" aria-label="Onsano home">onsan<span class="o">o</span></a>
+    <a class="nav-contact" href="mailto:info@onsano.com">Contact</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <span class="label rise">An AI layer for hospital work</span>
+      <h1 class="rise d1">Hospital work happens <em>between</em> the systems.</h1>
+      <p class="lede rise d2">Patient information lives in dozens of programs that don't talk to each other. Every day, people carry it across the gaps by hand. We're building an AI layer that understands what hospitals already know — and carries the routine work in between.</p>
+    </div>
+  </section>
+
+  <div class="thread wrap rise d3" role="img" aria-label="Illustration: a single green thread running behind a row of separate blocks, visible only in the gaps between them.">
+    <svg viewBox="0 0 640 130" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path class="path" pathLength="1" d="M -8 74 C 60 74, 90 40, 126 40 C 176 40, 200 88, 254 88 C 300 88, 316 52, 366 52 C 420 52, 442 76, 500 76 C 560 76, 580 64, 604 64"/>
+      <rect class="block" x="24"  y="34" width="88"  height="72" rx="10"/>
+      <rect class="block" x="140" y="22" width="100" height="88" rx="10"/>
+      <rect class="block" x="268" y="40" width="84"  height="64" rx="10"/>
+      <rect class="block" x="380" y="26" width="106" height="82" rx="10"/>
+      <rect class="block" x="514" y="36" width="76"  height="70" rx="10"/>
+      <circle class="dot" cx="616" cy="64" r="6"/>
+    </svg>
+    <p class="thread-caption">The systems stay. The gaps between them stop being someone's job.</p>
+  </div>
+
+  <section class="section">
+    <div class="wrap">
+      <span class="label">The idea</span>
+      <p>Hospitals don't lack information — they lack access to it in the moment it matters. What a patient needs is often already recorded somewhere; someone just has to go and find it, re-type it, and pass it on.</p>
+      <p>Modern AI can finally read and connect what's spread across a hospital's systems. Onsano is building that layer: software that brings together what the systems already contain, prepares the routine work that follows from it, and leaves every decision about care with the people trained to make it.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <span class="label">How we build</span>
+      <ul class="principles">
+        <li>
+          <h3>Judgment stays human</h3>
+          <p>Software can gather, sort, and prepare. Decisions about care belong to clinicians — that line doesn't move.</p>
+        </li>
+        <li>
+          <h3>Start from what exists</h3>
+          <p>Hospitals shouldn't need to replace their systems to benefit from AI. We build on the infrastructure that's already in place.</p>
+        </li>
+        <li>
+          <h3>European by design</h3>
+          <p>Data protection, security, and accountability are ground rules, not features. We build for the realities of European healthcare.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <span class="label">Where we are</span>
+      <p>Onsano is at the very beginning. We're spending our time inside hospitals, learning how the work actually gets done, before deciding what to build first.</p>
+      <div class="contact-card">
+        <a class="btn" href="mailto:info@onsano.com">info@onsano.com</a>
+        <span class="contact-note">If you work in healthcare and recognise the problem, we'd like to hear from you.</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <span>© 2026 Onsano</span>
+    <!-- TODO before going live: link a real Impressum and Datenschutzerklärung. Both are legally required for a German business website. -->
+    <nav aria-label="Legal">
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+    </nav>
+  </div>
+</footer>
+
 </body>
 </html>
