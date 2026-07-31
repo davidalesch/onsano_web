@@ -1,14 +1,23 @@
 ---
 import Logo from './Logo.astro';
 import CalButton from './CalButton.astro';
+import { ChevronDown } from 'lucide-astro';
 import { useTranslations, type Lang } from '../i18n/ui';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const home = lang === 'de' ? '/de/' : '/';
-const altHref = lang === 'de' ? '/' : '/de/';
-const altLabel = lang === 'de' ? 'EN' : 'DE';
+
+const locales: { code: Lang; label: string; href: string }[] = [
+  { code: 'en', label: 'English', href: '/' },
+  { code: 'de', label: 'Deutsch', href: '/de/' },
+  { code: 'fr', label: 'Français', href: '/fr/' },
+  { code: 'nl', label: 'Nederlands', href: '/nl/' },
+  { code: 'it', label: 'Italiano', href: '/it/' },
+  { code: 'es', label: 'Español', href: '/es/' },
+];
+const home = locales.find((l) => l.code === lang)?.href ?? '/';
+const otherLocales = locales.filter((l) => l.code !== lang);
 
 const nav = [
   { href: '#problem', label: t('nav.problem') },
@@ -28,7 +37,17 @@ const nav = [
     </nav>
 
     <div class="site-header__actions">
-      <a href={altHref} class="lang-switch" aria-label={`Switch language to ${altLabel}`}>{altLabel}</a>
+      <details class="lang-switch" data-lang-switch>
+        <summary aria-label="Change language">
+          <span>{lang.toUpperCase()}</span>
+          <ChevronDown class="lang-switch__chevron" width={14} height={14} stroke-width={2} aria-hidden="true" />
+        </summary>
+        <ul class="lang-switch__menu">
+          {otherLocales.map((l) => (
+            <li><a href={l.href} lang={l.code}>{l.label}</a></li>
+          ))}
+        </ul>
+      </details>
       <div class="site-header__cta"><CalButton label={t('cta.call')} /></div>
     </div>
   </div>
@@ -105,16 +124,65 @@ const nav = [
   }
 
   .site-header__actions { display: flex; align-items: center; gap: 1rem; }
+
+  /* Language switcher: a native <details> disclosure, styled as a small pill
+     trigger + dropdown menu. No JS required for the core interaction. */
   .lang-switch {
+    position: relative;
+  }
+  .lang-switch summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
     color: var(--color-muted);
-    text-decoration: none;
     font-size: 0.875rem;
     font-weight: 500;
     padding: 0.375rem 0.5rem;
     border-radius: var(--radius-sm);
+    cursor: pointer;
+    list-style: none;
     transition: color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
   }
-  .lang-switch:hover { color: var(--color-brand); background: var(--color-brand-100); }
+  .lang-switch summary::-webkit-details-marker { display: none; }
+  .lang-switch summary:hover,
+  .lang-switch[open] summary {
+    color: var(--color-brand);
+    background: var(--color-brand-100);
+  }
+  .lang-switch__chevron {
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .lang-switch[open] .lang-switch__chevron { transform: rotate(180deg); }
+
+  .lang-switch__menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 10;
+    min-width: 9rem;
+    margin: 0;
+    padding: 0.4rem;
+    list-style: none;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: 0 12px 32px -12px rgb(11 15 20 / 0.28);
+  }
+  .lang-switch__menu a {
+    position: relative;
+    display: block;
+    padding: 0.45rem 0.6rem;
+    border-radius: var(--radius-sm);
+    color: var(--color-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+  }
+  .lang-switch__menu a:hover,
+  .lang-switch__menu a:focus-visible {
+    color: var(--color-brand);
+    background: var(--color-brand-100);
+  }
 
   .site-header__cta { display: none; }
 
@@ -133,4 +201,18 @@ const nav = [
   };
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Close the language menu on outside click or Escape — <details> handles
+  // the open/close toggle natively, this just tidies up dismissal.
+  const langSwitch = document.querySelector('[data-lang-switch]');
+  document.addEventListener('click', (e) => {
+    if (langSwitch instanceof HTMLDetailsElement && langSwitch.open && !langSwitch.contains(e.target as Node)) {
+      langSwitch.open = false;
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && langSwitch instanceof HTMLDetailsElement) {
+      langSwitch.open = false;
+    }
+  });
 </script>
