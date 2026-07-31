@@ -1,0 +1,109 @@
+---
+import Logo from './Logo.astro';
+import CalButton from './CalButton.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const home = lang === 'de' ? '/de/' : '/';
+const altHref = lang === 'de' ? '/' : '/de/';
+const altLabel = lang === 'de' ? 'EN' : 'DE';
+
+const nav = [
+  { href: '#problem', label: t('nav.problem') },
+  { href: '#approach', label: t('nav.approach') },
+  { href: '#compliance', label: t('nav.compliance') },
+  { href: '#contact', label: t('nav.contact') },
+];
+---
+<header class="site-header" data-header>
+  <div class="container-page site-header__inner">
+    <a href={home} class="site-header__logo" aria-label="Onsano — home">
+      <Logo class="logo" />
+    </a>
+
+    <nav class="site-header__nav" aria-label="Primary">
+      {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+
+    <div class="site-header__actions">
+      <a href={altHref} class="lang-switch" aria-label={`Switch language to ${altLabel}`}>{altLabel}</a>
+      <div class="site-header__cta"><CalButton label={t('cta.call')} /></div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    /* Fixed and out of flow, so it overlays the page background (e.g. the hero's
+       gradient wash) all the way to the top instead of reserving its own space. */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    transition: background var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      backdrop-filter var(--dur-fast) var(--ease-out);
+    border-bottom: 1px solid transparent;
+  }
+  /* Transparent at the top; on scroll the ribbon turns white with a hairline
+     border and a soft shadow. Logo/nav/CTA keep their normal colours. */
+  .site-header[data-scrolled] {
+    background: color-mix(in srgb, var(--color-bg) 90%, transparent);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom-color: var(--color-border);
+    box-shadow: 0 1px 24px -14px rgb(11 15 20 / 0.28);
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    height: var(--header-h);
+  }
+  .site-header__logo { display: inline-flex; color: var(--color-brand); }
+
+  .site-header__nav {
+    display: none;
+    gap: 2rem;
+    font-size: 0.95rem;
+  }
+  .site-header__nav a {
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .site-header__nav a:hover { color: var(--color-brand); }
+
+  .site-header__actions { display: flex; align-items: center; gap: 1rem; }
+  .lang-switch {
+    color: var(--color-muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.375rem 0.5rem;
+    border-radius: var(--radius-sm);
+    transition: color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+  }
+  .lang-switch:hover { color: var(--color-brand); background: var(--color-brand-100); }
+
+  .site-header__cta { display: none; }
+
+  @media (min-width: 900px) {
+    .site-header__nav { display: flex; }
+    .site-header__cta { display: block; }
+  }
+</style>
+
+<script>
+  // Add a subtle background once the user scrolls past the hero top.
+  const header = document.querySelector('[data-header]');
+  const onScroll = () => {
+    if (window.scrollY > 4) header?.setAttribute('data-scrolled', '');
+    else header?.removeAttribute('data-scrolled');
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>

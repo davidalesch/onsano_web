@@ -1,0 +1,92 @@
+---
+import Logo from './Logo.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+
+const nav = [
+  { href: '#problem', label: t('nav.problem') },
+  { href: '#approach', label: t('nav.approach') },
+  { href: '#compliance', label: t('nav.compliance') },
+  { href: '#contact', label: t('nav.contact') },
+];
+// Legal pages are German instruments — always in German.
+const legal = [
+  { href: '/impressum', label: 'Impressum' },
+  { href: '/datenschutz', label: 'Datenschutzerklärung' },
+];
+---
+<footer class="site-footer">
+  <div class="container-page site-footer__inner">
+    <div class="site-footer__brand">
+      <Logo class="logo" />
+      <p class="site-footer__tagline">{t('footer.tagline')}</p>
+      <a href="mailto:info@onsano.com" class="site-footer__email">info@onsano.com</a>
+    </div>
+
+    <nav class="site-footer__col" aria-label="Sections">
+      {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+
+    <nav class="site-footer__col" aria-label="Legal">
+      {legal.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+  </div>
+
+  <div class="container-page site-footer__base">
+    <span>© {year} Onsano. {t('footer.rights')}</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--spacing-section);
+    border-top: 1px solid var(--color-border);
+    padding-top: clamp(3rem, 2rem + 4vw, 5rem);
+    padding-bottom: 2.5rem;
+  }
+  .site-footer__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .site-footer__brand { max-width: 22rem; color: var(--color-brand); }
+  .site-footer__tagline {
+    margin-top: 1rem;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+  }
+  .site-footer__email {
+    display: inline-block;
+    margin-top: 0.75rem;
+    color: var(--color-brand);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .site-footer__email:hover { text-decoration: underline; }
+
+  .site-footer__col { display: flex; flex-direction: column; gap: 0.75rem; }
+  .site-footer__col a {
+    color: var(--color-muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .site-footer__col a:hover { color: var(--color-brand); }
+
+  .site-footer__base {
+    margin-top: 3rem;
+    color: var(--color-muted);
+    font-size: 0.8125rem;
+  }
+
+  @media (min-width: 720px) {
+    .site-footer__inner {
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 3rem;
+    }
+  }
+</style>

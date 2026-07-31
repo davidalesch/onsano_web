@@ -1,0 +1,65 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base
+  lang="de"
+  title="Datenschutzerklärung — Onsano"
+  description="Datenschutzerklärung der Onsano gemäß Art. 13 DSGVO."
+>
+  <article class="legal container-page">
+    <h1>Datenschutzerklärung</h1>
+    <p class="legal__note">
+      ⚠️ Platzhalter — wird nach Gründung der Gesellschaft und finaler Festlegung
+      der eingesetzten Dienste (Hosting, Analyse, Terminbuchung) gemäß Art. 13 DSGVO
+      vervollständigt.
+    </p>
+
+    <h2>1. Verantwortlicher</h2>
+    <p>
+      [Firmenname], [Anschrift], E-Mail:
+      <a href="mailto:info@onsano.com">info@onsano.com</a>.
+    </p>
+
+    <h2>2. Hosting</h2>
+    <p>Diese Website wird bei Cloudflare Pages gehostet. [Details / AV-Vertrag ergänzen].</p>
+
+    <h2>3. Webanalyse (Google Analytics)</h2>
+    <p>
+      Wir setzen Google Analytics ausschließlich nach Ihrer ausdrücklichen
+      Einwilligung (Art. 6 Abs. 1 lit. a DSGVO) ein. Ohne Einwilligung werden keine
+      Analyse-Cookies gesetzt und keine Daten an Google übertragen. Die IP-Anonymisierung
+      ist aktiviert. [Empfänger, Drittlandübermittlung, Speicherdauer ergänzen].
+    </p>
+
+    <h2>4. Terminbuchung (Cal.com)</h2>
+    <p>
+      Für die Vereinbarung von Gesprächen nutzen wir Cal.com. Bei Nutzung werden die
+      von Ihnen eingegebenen Daten zur Terminabwicklung verarbeitet. [Details ergänzen].
+    </p>
+
+    <h2>5. Ihre Rechte</h2>
+    <p>
+      Auskunft, Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit, Widerspruch
+      sowie Widerruf erteilter Einwilligungen und Beschwerde bei einer Aufsichtsbehörde.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .legal {
+    max-width: 46rem;
+    padding-block: clamp(3rem, 5vw, 6rem);
+  }
+  .legal h1 { font-size: var(--text-h2); margin-bottom: 1rem; }
+  .legal h2 { font-size: var(--text-h3); margin-top: 2.5rem; margin-bottom: 0.75rem; }
+  .legal p { color: var(--color-ink); line-height: 1.7; }
+  .legal a { color: var(--color-brand); }
+  .legal__note {
+    color: var(--color-muted);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    font-size: 0.9rem;
+  }
+</style>

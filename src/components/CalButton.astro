@@ -1,0 +1,77 @@
+---
+/**
+ * Cal.com "schedule a call" trigger (element-click embed).
+ * The Cal script is initialised once in Base.astro; this just carries the
+ * data-cal-* attributes. variant: 'solid' (primary) | 'ghost' (secondary).
+ */
+import { ArrowRight } from 'lucide-astro';
+interface Props {
+  label: string;
+  variant?: 'solid' | 'ghost';
+  class?: string;
+}
+const { label, variant = 'solid', class: className = '' } = Astro.props;
+---
+<button
+  type="button"
+  data-cal-link="david-alesch/30min"
+  data-cal-namespace="30min"
+  data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'
+  class:list={['cal-btn', variant, className]}
+>
+  <span>{label}</span>
+  <ArrowRight class="cal-btn__icon" width={18} height={18} stroke-width={2} aria-hidden="true" />
+</button>
+
+<style>
+  .cal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
+  }
+  .cal-btn:hover {
+    transform: translateY(-1px);
+  }
+  .cal-btn:active {
+    transform: translateY(0);
+  }
+  .cal-btn__icon {
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .cal-btn:hover .cal-btn__icon {
+    transform: translateX(3px);
+  }
+
+  .cal-btn.solid {
+    /* Colours are inherited vars so a parent (e.g. the scrolled header) can
+       invert the button contextually without reaching into this scope. */
+    background: var(--btn-bg, var(--color-brand));
+    color: var(--btn-fg, #fff);
+  }
+  .cal-btn.solid:hover {
+    background: var(--btn-bg-hover, var(--color-brand-700));
+    color: var(--btn-fg, #fff);
+  }
+
+  .cal-btn.ghost {
+    background: transparent;
+    color: var(--color-brand);
+    border-color: var(--color-border);
+  }
+  .cal-btn.ghost:hover {
+    border-color: var(--color-brand);
+    background: var(--color-brand-100);
+  }
+</style>

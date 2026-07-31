@@ -1,0 +1,88 @@
+---
+/**
+ * GDPR-compliant cookie consent + consent-gated Google Analytics.
+ * GA (gtag) is NOT loaded until the visitor clicks "Accept". Decline stores a
+ * negative choice and loads nothing. Required for the DE/hospital audience.
+ *
+ * TODO: replace GA_MEASUREMENT_ID with the real GA4 id once provisioned.
+ */
+const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+---
+<div class="consent" data-consent hidden>
+  <p class="consent__text">
+    We use analytics cookies to understand how the site is used. They load only if you accept.
+    See our <a href="/datenschutz">Datenschutzerklärung</a>.
+  </p>
+  <div class="consent__actions">
+    <button type="button" data-consent-decline class="consent__btn ghost">Decline</button>
+    <button type="button" data-consent-accept class="consent__btn solid">Accept</button>
+  </div>
+</div>
+
+<style>
+  .consent {
+    position: fixed;
+    z-index: 100;
+    left: 50%;
+    bottom: 1.25rem;
+    transform: translateX(-50%);
+    width: min(40rem, calc(100vw - 2rem));
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    padding: 1rem 1.25rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 40px -12px rgb(11 15 20 / 0.25);
+  }
+  .consent__text { flex: 1 1 16rem; font-size: 0.875rem; color: var(--color-muted); margin: 0; }
+  .consent__text a { color: var(--color-brand); }
+  .consent__actions { display: flex; gap: 0.5rem; margin-left: auto; }
+  .consent__btn {
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+  }
+  .consent__btn.solid { background: var(--color-brand); color: #fff; }
+  .consent__btn.solid:hover { background: var(--color-brand-700); }
+  .consent__btn.ghost { background: transparent; color: var(--color-muted); border-color: var(--color-border); }
+  .consent__btn.ghost:hover { border-color: var(--color-brand); color: var(--color-brand); }
+</style>
+
+<script define:vars={{ GA_MEASUREMENT_ID }}>
+  const KEY = 'onsano-consent';
+  const banner = document.querySelector('[data-consent]');
+
+  function loadGA() {
+    if (!GA_MEASUREMENT_ID || GA_MEASUREMENT_ID.includes('XXXX')) return; // no real id yet
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', GA_MEASUREMENT_ID, { anonymize_ip: true });
+  }
+
+  const choice = localStorage.getItem(KEY);
+  if (choice === 'accepted') loadGA();
+  else if (choice !== 'declined') banner?.removeAttribute('hidden');
+
+  banner?.querySelector('[data-consent-accept]')?.addEventListener('click', () => {
+    localStorage.setItem(KEY, 'accepted');
+    banner.setAttribute('hidden', '');
+    loadGA();
+  });
+  banner?.querySelector('[data-consent-decline]')?.addEventListener('click', () => {
+    localStorage.setItem(KEY, 'declined');
+    banner.setAttribute('hidden', '');
+  });
+</script>

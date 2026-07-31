@@ -1,0 +1,52 @@
+---
+import CalButton from './CalButton.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+<section id="contact" class="contact">
+  <div class="container-page contact__inner">
+    <h2 class="contact__title" data-reveal>{t('contact.title')}</h2>
+
+    <div class="contact__cta" data-reveal style="--reveal-delay:90ms">
+      <CalButton label={t('cta.call')} />
+    </div>
+
+    <p class="contact__email" data-reveal style="--reveal-delay:160ms">
+      {t('contact.emailLabel')} <a href="mailto:info@onsano.com">info@onsano.com</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  /* A calm, functional endpoint — deliberately less motion than the sections
+     above it: a plain fade-up (data-reveal), not the scroll-scrubbed
+     blur/scale treatment used elsewhere. No diagrams, no assembly. */
+  .contact { padding-block: var(--spacing-section); }
+  .contact__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.75rem;
+  }
+  .contact__title {
+    font-size: var(--text-h2);
+    line-height: 1.2;
+    max-width: 26ch;
+    margin: 0;
+  }
+  .contact__email {
+    color: var(--color-muted);
+    font-size: 0.9375rem;
+    margin: 0;
+  }
+  .contact__email a {
+    color: var(--color-brand);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .contact__email a:hover { text-decoration: underline; }
+</style>

@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base
+  lang="de"
+  title="Impressum — Onsano"
+  description="Impressum der Onsano."
+>
+  <article class="legal container-page">
+    <h1>Impressum</h1>
+    <p class="legal__note">
+      ⚠️ Platzhalter — wird nach Gründung der Gesellschaft mit den echten Angaben
+      gemäß § 5 DDG vervollständigt.
+    </p>
+
+    <h2>Angaben gemäß § 5 DDG</h2>
+    <p>
+      [Firmenname / Rechtsform]<br />
+      [Straße und Hausnummer]<br />
+      [PLZ Ort]<br />
+      Deutschland
+    </p>
+
+    <h2>Vertreten durch</h2>
+    <p>[Geschäftsführer:innen]</p>
+
+    <h2>Kontakt</h2>
+    <p>E-Mail: <a href="mailto:info@onsano.com">info@onsano.com</a></p>
+
+    <h2>Registereintrag</h2>
+    <p>
+      Eintragung im Handelsregister.<br />
+      Registergericht: [Amtsgericht]<br />
+      Registernummer: [HRB …]
+    </p>
+
+    <h2>Umsatzsteuer-ID</h2>
+    <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: [DE …]</p>
+  </article>
+</Base>
+
+<style>
+  .legal {
+    max-width: 46rem;
+    padding-block: clamp(3rem, 5vw, 6rem);
+  }
+  .legal h1 { font-size: var(--text-h2); margin-bottom: 1rem; }
+  .legal h2 { font-size: var(--text-h3); margin-top: 2.5rem; margin-bottom: 0.75rem; }
+  .legal p { color: var(--color-ink); line-height: 1.7; }
+  .legal a { color: var(--color-brand); }
+  .legal__note {
+    color: var(--color-muted);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    font-size: 0.9rem;
+  }
+</style>

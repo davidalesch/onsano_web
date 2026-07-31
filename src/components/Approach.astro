@@ -1,0 +1,117 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+<section id="approach" class="approach">
+  <div class="container-page approach__inner">
+    <p class="approach__kicker sd-rise" style="--sd-range: entry 2% cover 26%">{t('approach.kicker')}</p>
+    <h2 class="approach__title sd-rise" style="--sd-range: entry 6% cover 36%">{t('approach.title')}</h2>
+    <p class="approach__body sd-rise" style="--sd-range: entry 12% cover 44%">{t('approach.body')}</p>
+
+    <!-- The conceptual carrier: an intelligence layer on top of existing systems. -->
+    <div class="approach__diagram">
+      <svg viewBox="0 0 520 340" fill="none" xmlns="http://www.w3.org/2000/svg" role="img"
+           aria-label={`${t('approach.layerLabel')} — ${t('approach.systemsLabel')}`}>
+        <!-- connectors (fade in) -->
+        <g class="ap ap--link" stroke="#3f7d63" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 8" opacity="0.6">
+          <path d="M180 128 L108 216"/>
+          <path d="M260 130 L260 216"/>
+          <path d="M340 128 L412 216"/>
+        </g>
+
+        <!-- existing hospital systems (rise from below) -->
+        <g class="ap ap--sys">
+          <rect x="64" y="216" width="88" height="88" rx="22" fill="var(--color-surface)" stroke="#8a99ab" stroke-width="3"/>
+          <rect x="216" y="216" width="88" height="88" rx="22" fill="var(--color-surface)" stroke="#8a99ab" stroke-width="3"/>
+          <rect x="368" y="216" width="88" height="88" rx="22" fill="var(--color-surface)" stroke="#8a99ab" stroke-width="3"/>
+        </g>
+
+        <!-- the Onsano layer sitting on top (drops in) -->
+        <g class="ap ap--layer">
+          <rect x="120" y="40" width="280" height="88" rx="24" fill="#355270"/>
+          <rect x="150" y="70" width="26" height="26" rx="7" fill="none" stroke="#fff" stroke-width="2.4" opacity="0.65" transform="translate(-6 6)"/>
+          <rect x="150" y="70" width="26" height="26" rx="7" fill="#fff"/>
+          <text x="196" y="92" class="ap__label">{t('approach.layerLabel')}</text>
+        </g>
+
+        <text x="260" y="332" text-anchor="middle" class="ap__caption">{t('approach.systemsLabel')}</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .approach { padding-block: var(--spacing-section); }
+  .approach__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .approach__kicker {
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-green-ink);
+    margin: 0 0 1rem;
+  }
+  .approach__title {
+    font-size: var(--text-h2);
+    line-height: 1.15;
+    max-width: 20ch;
+    margin: 0 0 1.25rem;
+  }
+  .approach__body {
+    font-size: var(--text-lead);
+    line-height: 1.6;
+    color: var(--color-muted);
+    max-width: 52ch;
+    margin: 0 0 clamp(2.5rem, 5vw, 4rem);
+  }
+  .approach__diagram {
+    width: 100%;
+    max-width: 34rem;
+  }
+  .approach__diagram svg { width: 100%; height: auto; display: block; }
+
+  .ap__label {
+    fill: #fff;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 26px;
+    letter-spacing: -0.01em;
+  }
+  .ap__caption {
+    fill: var(--color-muted);
+    font-family: var(--font-body);
+    font-size: 15px;
+  }
+
+  /* Assemble on scroll: layer drops from above, systems rise, connectors fade. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .approach__diagram { view-timeline: --ap block; }
+      .ap { animation: linear both; animation-timeline: --ap; will-change: transform, opacity; }
+      .ap--layer { animation-name: ap-drop; animation-range: entry 8% cover 44%; }
+      .ap--sys { animation-name: ap-rise; animation-range: entry 14% cover 52%; }
+      .ap--link { animation-name: ap-fade; animation-range: entry 30% cover 58%; }
+    }
+  }
+  @keyframes ap-drop {
+    from { opacity: 0; transform: translateY(-46px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes ap-rise {
+    from { opacity: 0; transform: translateY(46px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes ap-fade {
+    from { opacity: 0; }
+    to { opacity: 0.6; }
+  }
+</style>

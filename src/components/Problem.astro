@@ -1,0 +1,120 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+<section id="problem" class="problem">
+  <div class="container-page problem__grid">
+    <div class="problem__text">
+      <p class="problem__kicker sd-rise" style="--sd-range: entry 4% cover 30%">{t('problem.kicker')}</p>
+      <h2 class="problem__title sd-rise" style="--sd-range: entry 8% cover 40%">{t('problem.title')}</h2>
+      <p class="problem__body sd-rise" style="--sd-range: entry 14% cover 48%">{t('problem.body')}</p>
+    </div>
+
+    <div class="problem__visual" aria-hidden="true">
+      <!-- The mark motif with a detached/incomplete layer = the documentation gap.
+           Shapes slide in from outside into place as the section scrolls into view. -->
+      <svg viewBox="0 0 320 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- complete record: two solid layered squares (arrive from the left) -->
+        <g class="dg dg--record">
+          <rect x="40" y="70" width="120" height="120" rx="32" fill="none" stroke="#355270" stroke-width="4" opacity="0.35"/>
+          <rect x="78" y="38" width="120" height="120" rx="32" fill="#355270" opacity="0.10"/>
+          <rect x="78" y="38" width="120" height="120" rx="32" fill="none" stroke="#355270" stroke-width="4"/>
+        </g>
+        <!-- the missing/incomplete layer: detached, dashed (arrives from the right) -->
+        <g class="dg dg--gap">
+          <rect x="150" y="150" width="120" height="120" rx="32" fill="none"
+                stroke="#3f7d63" stroke-width="4" stroke-dasharray="10 12" stroke-linecap="round"/>
+        </g>
+        <!-- connector implying the gap between record and system (fades in last) -->
+        <path class="dg dg--link" d="M170 150 L138 118" stroke="#3f7d63" stroke-width="3"
+              stroke-dasharray="6 9" stroke-linecap="round" opacity="0.7"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .problem {
+    padding-block: var(--spacing-section);
+  }
+  .problem__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .problem__kicker {
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-green-ink);
+    margin: 0 0 1rem;
+  }
+  .problem__title {
+    font-size: var(--text-h2);
+    line-height: 1.15;
+    max-width: 18ch;
+    margin: 0 0 1.5rem;
+  }
+  .problem__body {
+    font-size: var(--text-lead);
+    line-height: 1.6;
+    color: var(--color-muted);
+    max-width: 46ch;
+    margin: 0;
+  }
+  .problem__visual {
+    display: flex;
+    justify-content: center;
+  }
+  .problem__visual svg {
+    width: 100%;
+    max-width: 22rem;
+    height: auto;
+  }
+
+  @media (min-width: 860px) {
+    .problem__grid { grid-template-columns: 1.1fr 0.9fr; }
+  }
+
+  /* Shapes fly in from outside into place, linked to scroll. Fallback: static. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .problem__visual { view-timeline: --dg block; }
+      .dg {
+        animation: linear both;
+        animation-timeline: --dg;
+        will-change: transform, opacity;
+      }
+      .dg--record {
+        animation-name: dg-in-left;
+        animation-range: entry 6% cover 42%;
+      }
+      .dg--gap {
+        animation-name: dg-in-right;
+        animation-range: entry 16% cover 56%;
+      }
+      .dg--link {
+        animation-name: dg-appear;
+        animation-range: entry 38% cover 62%;
+      }
+    }
+  }
+  @keyframes dg-in-left {
+    from { opacity: 0; transform: translateX(-95px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes dg-in-right {
+    from { opacity: 0; transform: translate(95px, 55px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes dg-appear {
+    from { opacity: 0; }
+    to { opacity: 0.7; }
+  }
+</style>
