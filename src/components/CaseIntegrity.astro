@@ -1,0 +1,273 @@
+---
+/**
+ * The shared abstract visual (design-guide.md §6), adapted for the Problem
+ * section: a case sheet showing an audit trail of documentation entries.
+ * Three entries carry gaps. As the section scrolls into view the gaps start
+ * to close in brand green — but stop partway and turn the muted danger red,
+ * with a warning marker in place of a checkmark: the documentation never
+ * gets completed, which is exactly what puts the case at risk. The outer
+ * frame echoes the same idea — it starts tracing a seal, but the seal never
+ * closes.
+ *
+ * The frame is a rounded square echoing the Onsano mark, so the figure reads
+ * as part of the identity rather than generic startup geometry.
+ *
+ * No numbers, no product UI, no stock imagery — nothing here asserts a fact.
+ */
+interface Props {
+	class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+const H = 8; // bar height
+const FILL = 0.52; // fraction of the gap that fills before it halts
+
+type Row = { y: number; bars: [number, number][]; gap?: [number, number] };
+
+const rows: Row[] = [
+	{ y: 110, bars: [[104, 220], [228, 300], [308, 380]] },
+	{ y: 154, bars: [[104, 180], [294, 380]], gap: [188, 286] },
+	{ y: 198, bars: [[104, 250], [258, 380]] },
+	{ y: 242, bars: [[104, 150], [278, 380]], gap: [158, 270] },
+	{ y: 286, bars: [[104, 300]], gap: [308, 380] },
+	{ y: 330, bars: [[104, 220], [228, 380]] },
+];
+
+// Each gap halts a little later than the one above it, so the stall reads as
+// a sweep down the record rather than everything stopping at once.
+const gapRows = rows.filter((r) => r.gap);
+const stagger = (i: number) => ({ start: 6 + i * 12, end: 34 + i * 14 });
+---
+
+<svg
+	viewBox="0 0 440 400"
+	fill="none"
+	aria-hidden="true"
+	class={`case-integrity h-auto w-full ${className}`}
+>
+	<!-- Case sheet -->
+	<rect
+		x="8"
+		y="8"
+		width="424"
+		height="384"
+		rx="36"
+		fill="var(--color-brand)"
+		fill-opacity="0.02"
+		stroke="var(--color-brand)"
+		stroke-opacity="0.18"
+		stroke-width="1.5"
+	/>
+
+	<!-- Header band: the Onsano mark, echoed at small scale -->
+	<g>
+		<rect
+			x="34"
+			y="38"
+			width="20"
+			height="20"
+			rx="6"
+			stroke="var(--color-brand)"
+			stroke-opacity="0.5"
+			stroke-width="1.5"
+		/>
+		<rect
+			x="44"
+			y="28"
+			width="20"
+			height="20"
+			rx="6"
+			fill="var(--color-brand)"
+			fill-opacity="0.55"
+		/>
+		<rect x="80" y="34" width="72" height="8" rx="4" fill="var(--color-brand)" fill-opacity="0.3" />
+		<rect x="80" y="48" width="44" height="6" rx="3" fill="var(--color-brand)" fill-opacity="0.16" />
+		<line x1="8" y1="82" x2="432" y2="82" stroke="var(--color-brand)" stroke-opacity="0.12" />
+	</g>
+
+	<!-- Audit trail rail -->
+	<line
+		x1="40"
+		y1="114"
+		x2="40"
+		y2="334"
+		stroke="var(--color-brand)"
+		stroke-opacity="0.2"
+		stroke-width="1.5"
+	/>
+
+	{
+		rows.map((row) => {
+			const gapIndex = gapRows.indexOf(row);
+			const range = gapIndex >= 0 ? stagger(gapIndex) : null;
+			const gapWidth = row.gap ? row.gap[1] - row.gap[0] : 0;
+			return (
+				<g>
+					<circle
+						cx="40"
+						cy={row.y + H / 2}
+						r="4"
+						fill="var(--color-surface)"
+						stroke="var(--color-brand)"
+						stroke-opacity="0.45"
+						stroke-width="1.5"
+					/>
+
+					{/* entry label */}
+					<rect x="60" y={row.y} width="32" height={H} rx={H / 2} fill="var(--color-brand)" fill-opacity="0.55" />
+
+					{/* documentation already present */}
+					{row.bars.map(([x, xe]) => (
+						<rect x={x} y={row.y} width={xe - x} height={H} rx={H / 2} fill="var(--color-brand)" fill-opacity="0.26" />
+					))}
+
+					{row.gap && range && (
+						<>
+							{/* the missing stretch */}
+							<rect
+								x={row.gap[0]}
+								y={row.y}
+								width={gapWidth}
+								height={H}
+								rx={H / 2}
+								stroke="var(--color-brand)"
+								stroke-opacity="0.35"
+								stroke-width="1"
+								stroke-dasharray="3 3"
+							/>
+							{/* …attempts to close, stalls short, and reads as missing */}
+							<rect
+								class="gap-fill"
+								style={`--s:entry ${range.start}%; --e:cover ${range.end}%; --fill-frac:${FILL}`}
+								x={row.gap[0]}
+								y={row.y}
+								width={gapWidth}
+								height={H}
+								rx={H / 2}
+								fill="var(--color-danger)"
+							/>
+							{/* warning marker: this entry never confirms */}
+							<g class="warn" style={`--s:entry ${range.end - 8}%; --e:cover ${range.end}%`}>
+								<circle cx="401" cy={row.y + 3} r="7" fill="var(--color-danger)" />
+								<rect x="399.4" y={row.y - 1} width="3.2" height="6" rx="1.6" fill="var(--color-bg)" />
+								<circle cx="401" cy={row.y + 7} r="1.5" fill="var(--color-bg)" />
+							</g>
+						</>
+					)}
+				</g>
+			);
+		})
+	}
+
+	<!-- Unsealed: the frame starts to trace a seal but the line never closes -->
+	<rect
+		class="seal"
+		x="8"
+		y="8"
+		width="424"
+		height="384"
+		rx="36"
+		stroke="var(--color-danger)"
+		stroke-opacity="0.85"
+		stroke-width="1.75"
+	/>
+</svg>
+
+<style>
+	/* Default state is the HALTED one, so browsers without scroll-driven
+	   animation support (and reduced-motion users) get the true resting
+	   state — an at-risk case — rather than an animation's mid-frame. */
+	.seal {
+		stroke-dasharray: 1560;
+		stroke-dashoffset: 260;
+	}
+
+	.gap-fill {
+		transform-box: fill-box;
+		transform-origin: left center;
+		transform: scaleX(var(--fill-frac, 0.52));
+	}
+
+	.warn {
+		opacity: 1;
+		transform-box: fill-box;
+		transform-origin: center;
+	}
+
+	.case-integrity {
+		view-timeline-name: --case-integrity;
+		view-timeline-axis: block;
+	}
+
+	@supports (animation-timeline: view()) {
+		@media (prefers-reduced-motion: no-preference) {
+			.gap-fill {
+				animation: close-gap-halt linear both;
+				animation-timeline: --case-integrity;
+				animation-range: var(--s) var(--e);
+			}
+
+			.warn {
+				animation: warn-in linear both;
+				animation-timeline: --case-integrity;
+				animation-range: var(--s) var(--e);
+			}
+
+			.seal {
+				animation: trace-unsealed linear both;
+				animation-timeline: --case-integrity;
+				animation-range: entry 10% cover 88%;
+			}
+		}
+	}
+
+	@keyframes close-gap-halt {
+		0% {
+			transform: scaleX(0);
+			fill: var(--color-brand-green);
+		}
+		65% {
+			transform: scaleX(var(--fill-frac, 0.52));
+			fill: var(--color-brand-green);
+		}
+		100% {
+			transform: scaleX(var(--fill-frac, 0.52));
+			fill: var(--color-danger);
+		}
+	}
+
+	@keyframes warn-in {
+		from {
+			opacity: 0;
+			transform: scale(0.6);
+		}
+		to {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	@keyframes trace-unsealed {
+		0% {
+			stroke-dashoffset: 1560;
+			stroke: var(--color-brand-green);
+		}
+		70% {
+			stroke-dashoffset: 260;
+			stroke: var(--color-brand-green);
+		}
+		100% {
+			stroke-dashoffset: 260;
+			stroke: var(--color-danger);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.seal,
+		.gap-fill,
+		.warn {
+			animation: none;
+		}
+	}
+</style>

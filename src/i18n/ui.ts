@@ -21,6 +21,7 @@ export const ui = {
     'hero.eyebrow': 'AI-native revenue protection for hospitals',
     'hero.title.line1': 'Protect the revenue',
     'hero.title.line2': 'you’ve already earned.',
+    'hero.subtitle': 'Earned by your clinicians. At risk in the paperwork.',
     'hero.lead':
       'Onsano brings AI agents into hospital documentation and audit workflows — keeping records complete and cases defensible, so earned revenue survives the audit.',
     'hero.scroll': 'Scroll',
@@ -56,6 +57,7 @@ export const ui = {
     'hero.eyebrow': 'KI-native Erlössicherung für Krankenhäuser',
     'hero.title.line1': 'Erlöse schützen,',
     'hero.title.line2': 'die Ihnen zustehen.',
+    'hero.subtitle': 'Erbracht von Ihrem Klinikpersonal. Gefährdet in der Aktenlage.',
     'hero.lead':
       'Onsano bringt KI-Agenten in Dokumentations- und Prüfprozesse — damit Akten vollständig und Fälle prüfsicher bleiben und erwirtschaftete Erlöse die Prüfung überstehen.',
     'hero.scroll': 'Scrollen',

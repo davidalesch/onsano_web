@@ -30,6 +30,8 @@
 
   --color-border: #e4e9ee;           /* hairlines, card edges */
 
+  --color-danger: #b3402f;           /* muted red — decorative "at risk" signal ~5.7:1 */
+
   /* Mark uses this as the "gap" colour between the two squares.
      Set to the current section background so the notch reads correctly. */
   --logo-gap: var(--color-bg);
@@ -183,7 +185,7 @@ html.js-reveal [data-reveal].is-visible {
     .sd-rise {
       animation: sd-rise linear both;
       animation-timeline: view();
-      animation-range: var(--sd-range, entry 8% cover 42%);
+      animation-range: var(--sd-range, entry 4% cover 26%);
       will-change: opacity, transform, filter;
     }
   }

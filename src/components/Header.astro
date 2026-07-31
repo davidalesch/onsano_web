@@ -70,12 +70,39 @@ const nav = [
     gap: 2rem;
     font-size: 0.95rem;
   }
+  /* One clean, uniform hover cue used everywhere in the header: a hairline
+     underline grows in from the center, brand-green, under the text colour
+     shifting to brand-blue. Same language as the CTA's hover treatment. */
   .site-header__nav a {
+    position: relative;
+    display: inline-block;
     color: var(--color-muted);
     text-decoration: none;
+    padding-bottom: 0.35rem;
     transition: color var(--dur-fast) var(--ease-out);
   }
-  .site-header__nav a:hover { color: var(--color-brand); }
+  .site-header__nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--color-brand-green);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .site-header__nav a:hover,
+  .site-header__nav a:focus-visible { color: var(--color-brand); }
+  .site-header__nav a:hover::after,
+  .site-header__nav a:focus-visible::after {
+    transform: scaleX(1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-header__nav a::after { transition: none; }
+  }
 
   .site-header__actions { display: flex; align-items: center; gap: 1rem; }
   .lang-switch {

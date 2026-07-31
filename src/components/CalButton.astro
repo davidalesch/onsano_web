@@ -25,6 +25,8 @@ const { label, variant = 'solid', class: className = '' } = Astro.props;
 
 <style>
   .cal-btn {
+    position: relative;
+    overflow: hidden;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -41,11 +43,32 @@ const { label, variant = 'solid', class: className = '' } = Astro.props;
       border-color var(--dur-fast) var(--ease-out),
       transform var(--dur-fast) var(--ease-out);
   }
+  /* One clean, uniform hover cue used everywhere: a hairline underline grows
+     in from the center, brand-green — the same treatment as header nav links. */
+  .cal-btn::after {
+    content: '';
+    position: absolute;
+    left: 1.25rem;
+    right: 1.25rem;
+    bottom: 0.5rem;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--color-brand-green);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
   .cal-btn:hover {
     transform: translateY(-1px);
   }
+  .cal-btn:hover::after {
+    transform: scaleX(1);
+  }
   .cal-btn:active {
     transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cal-btn::after { transition: none; }
   }
   .cal-btn__icon {
     transition: transform var(--dur-fast) var(--ease-out);

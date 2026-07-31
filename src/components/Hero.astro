@@ -20,6 +20,7 @@ const t = useTranslations(lang);
         <span class="hero__line">{t('hero.title.line1')}</span>
         <span class="hero__line">{t('hero.title.line2')}</span>
       </h1>
+      <p class="hero__subtitle">{t('hero.subtitle')}</p>
     </div>
     <a href="#value" class="hero__scroll" aria-label={t('hero.scroll')}>
       <span>{t('hero.scroll')}</span>
@@ -29,12 +30,12 @@ const t = useTranslations(lang);
 
   <!-- Beat 2: supporting value block — reveals with scroll as you leave beat 1. -->
   <div class="container-page hero__value" id="value">
-    <p class="hero__eyebrow sd-rise" style="--sd-range: entry 2% cover 34%">
+    <p class="hero__eyebrow sd-rise" style="--sd-range: entry 1% cover 20%">
       <Layers width={16} height={16} stroke-width={2} aria-hidden="true" />
       <span>{t('hero.eyebrow')}</span>
     </p>
-    <p class="hero__lead sd-rise" style="--sd-range: entry 8% cover 42%">{t('hero.lead')}</p>
-    <div class="hero__cta sd-rise" style="--sd-range: entry 16% cover 50%">
+    <p class="hero__lead sd-rise" style="--sd-range: entry 4% cover 26%">{t('hero.lead')}</p>
+    <div class="hero__cta sd-rise" style="--sd-range: entry 8% cover 32%">
       <CalButton label={t('cta.call')} />
     </div>
   </div>
@@ -89,9 +90,18 @@ const t = useTranslations(lang);
     font-size: clamp(2.75rem, 1.6rem + 4.6vw, 4.5rem);
     line-height: 1.08;
     max-width: min(100%, 66rem);
-    margin: 0;
+    margin: 0 auto;
   }
   .hero__line { display: block; }
+
+  .hero__subtitle {
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--color-green-ink);
+    margin: 1.25rem auto 0;
+  }
 
   .hero__scroll {
     position: absolute;
@@ -139,7 +149,7 @@ const t = useTranslations(lang);
     line-height: 1.55;
     color: var(--color-muted);
     max-width: 46ch;
-    margin: 0;
+    margin: 0 auto;
   }
 
   /* --- Motion --- */
