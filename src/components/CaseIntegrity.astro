@@ -147,8 +147,8 @@ const stagger = (i: number) => ({ start: 6 + i * 12, end: 34 + i * 14 });
 								rx={H / 2}
 								fill="var(--color-danger)"
 							/>
-							{/* warning marker: this entry never confirms */}
-							<g class="warn" style={`--s:entry ${range.end - 8}%; --e:cover ${range.end}%`}>
+							{/* warning marker: pops the instant the bar finishes turning red */}
+							<g class="warn" style={`--s:cover ${range.end}%; --e:cover ${range.end + 3}%`}>
 								<circle cx="401" cy={row.y + 3} r="7" fill="var(--color-danger)" />
 								<rect x="399.4" y={row.y - 1} width="3.2" height="6" rx="1.6" fill="var(--color-bg)" />
 								<circle cx="401" cy={row.y + 7} r="1.5" fill="var(--color-bg)" />
