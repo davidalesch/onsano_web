@@ -8,27 +8,35 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const legalPage = pathname.endsWith('/impressum')
+  ? 'impressum'
+  : pathname.endsWith('/datenschutz')
+    ? 'datenschutz'
+    : null;
+const localeHome = (code: Lang) => code === 'en' ? '/' : `/${code}/`;
+const localeHref = (code: Lang) => legalPage ? `${localeHome(code)}${legalPage}/` : localeHome(code);
 const locales: { code: Lang; label: string; href: string }[] = [
-  { code: 'en', label: 'English', href: '/' },
-  { code: 'de', label: 'Deutsch', href: '/de/' },
-  { code: 'fr', label: 'Français', href: '/fr/' },
-  { code: 'nl', label: 'Nederlands', href: '/nl/' },
-  { code: 'it', label: 'Italiano', href: '/it/' },
-  { code: 'es', label: 'Español', href: '/es/' },
+  { code: 'en', label: 'English', href: localeHref('en') },
+  { code: 'de', label: 'Deutsch', href: localeHref('de') },
+  { code: 'fr', label: 'Français', href: localeHref('fr') },
+  { code: 'nl', label: 'Nederlands', href: localeHref('nl') },
+  { code: 'it', label: 'Italiano', href: localeHref('it') },
+  { code: 'es', label: 'Español', href: localeHref('es') },
 ];
-const home = locales.find((l) => l.code === lang)?.href ?? '/';
+const home = localeHome(lang);
 const otherLocales = locales.filter((l) => l.code !== lang);
 
 const nav = [
-  { href: '#problem', label: t('nav.problem') },
-  { href: '#approach', label: t('nav.approach') },
-  { href: '#compliance', label: t('nav.compliance') },
-  { href: '#contact', label: t('nav.contact') },
+  { href: legalPage ? `${home}#problem` : '#problem', label: t('nav.problem') },
+  { href: legalPage ? `${home}#approach` : '#approach', label: t('nav.approach') },
+  { href: legalPage ? `${home}#compliance` : '#compliance', label: t('nav.compliance') },
+  { href: legalPage ? `${home}#contact` : '#contact', label: t('nav.contact') },
 ];
 ---
 <header class="site-header" data-header>
   <div class="container-page site-header__inner">
-    <a href={home} class="site-header__logo" aria-label="Onsano — home">
+    <a href={home} class="site-header__logo" aria-label="Onsano, home">
       <Logo class="logo" />
     </a>
 
@@ -44,7 +52,7 @@ const nav = [
         </summary>
         <ul class="lang-switch__menu">
           {otherLocales.map((l) => (
-            <li><a href={l.href} lang={l.code}>{l.label}</a></li>
+            <li><a href={l.href} lang={l.code} data-language-link>{l.label}</a></li>
           ))}
         </ul>
       </details>
@@ -67,13 +75,15 @@ const nav = [
       backdrop-filter var(--dur-fast) var(--ease-out);
     border-bottom: 1px solid transparent;
   }
-  /* Transparent at the top; on scroll the ribbon turns white with a hairline
-     border and a soft shadow. Logo/nav/CTA keep their normal colours. */
-  .site-header[data-scrolled] {
-    background: color-mix(in srgb, var(--color-bg) 90%, transparent);
-    backdrop-filter: saturate(180%) blur(12px);
-    border-bottom-color: var(--color-border);
-    box-shadow: 0 1px 24px -14px rgb(11 15 20 / 0.28);
+  /* Once the page moves, keep one transparent blurred ribbon over both the
+     blue and white surfaces. Only the foreground colours adapt. */
+  .site-header[data-scrolled],
+  .site-header[data-on-dark][data-dark-scrolled] {
+    background: transparent;
+    -webkit-backdrop-filter: saturate(150%) blur(14px);
+    backdrop-filter: saturate(150%) blur(14px);
+    border-bottom-color: transparent;
+    box-shadow: none;
   }
   .site-header__inner {
     display: flex;
@@ -95,13 +105,6 @@ const nav = [
   :global(body:has([data-hero-dark])) .site-header:not([data-scrolled]),
   .site-header[data-on-dark] {
     --logo-gap: var(--color-brand);
-  }
-  .site-header[data-on-dark][data-dark-scrolled] {
-    background: color-mix(in srgb, var(--color-brand) 72%, transparent);
-    -webkit-backdrop-filter: saturate(145%) blur(14px);
-    backdrop-filter: saturate(145%) blur(14px);
-    border-bottom-color: rgb(255 255 255 / 0.08);
-    box-shadow: 0 8px 30px -24px rgb(11 15 20 / 0.5);
   }
   :global(body:has([data-hero-dark])) .site-header:not([data-scrolled]) .site-header__logo,
   .site-header[data-on-dark] .site-header__logo { color: #fff; }
@@ -262,9 +265,42 @@ const nav = [
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll, { passive: true });
 
-  // Close the language menu on outside click or Escape — <details> handles
+  // Close the language menu on outside click or Escape. <details> handles
   // the open/close toggle natively, this just tidies up dismissal.
   const langSwitch = document.querySelector('[data-lang-switch]');
+  const LANGUAGE_SCROLL_KEY = 'onsano-language-scroll';
+
+  document.querySelectorAll<HTMLAnchorElement>('[data-language-link]').forEach((link) => {
+    link.addEventListener('click', () => {
+      sessionStorage.setItem(LANGUAGE_SCROLL_KEY, JSON.stringify({
+        top: window.scrollY,
+        savedAt: Date.now(),
+      }));
+      history.scrollRestoration = 'manual';
+    });
+  });
+
+  const savedScroll = sessionStorage.getItem(LANGUAGE_SCROLL_KEY);
+  if (savedScroll) {
+    sessionStorage.removeItem(LANGUAGE_SCROLL_KEY);
+    try {
+      const state = JSON.parse(savedScroll) as { top?: number; savedAt?: number };
+      if (typeof state.top === 'number' && typeof state.savedAt === 'number' && Date.now() - state.savedAt < 10000) {
+        history.scrollRestoration = 'manual';
+        const restoreLanguageScroll = () => {
+          const root = document.documentElement;
+          const previousScrollBehavior = root.style.scrollBehavior;
+          root.style.scrollBehavior = 'auto';
+          const maxScroll = Math.max(0, root.scrollHeight - window.innerHeight);
+          window.scrollTo(0, Math.max(0, Math.min(maxScroll, state.top!)));
+          window.requestAnimationFrame(() => { root.style.scrollBehavior = previousScrollBehavior; });
+        };
+        restoreLanguageScroll();
+      }
+    } catch {
+      // Ignore an invalid or stale position value.
+    }
+  }
   document.addEventListener('click', (e) => {
     if (langSwitch instanceof HTMLDetailsElement && langSwitch.open && !langSwitch.contains(e.target as Node)) {
       langSwitch.open = false;

@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import { legalCopy } from '../i18n/legal';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  document: 'imprint' | 'privacy';
+}
+
+const { lang, document } = Astro.props;
+const copy = legalCopy[lang][document];
+---
+<Base lang={lang} title={`${copy.title}, Onsano`} description={copy.description}>
+  <article class="legal container-page">
+    <h1>{copy.title}</h1>
+    <p class="legal__note">{copy.notice}</p>
+
+    {copy.sections.map((section) => (
+      <section class="legal__section">
+        <h2>{section.heading}</h2>
+        {section.paragraphs.map((paragraph) => (
+          <p class:list={{ legal__pending: paragraph.pending }} set:html={paragraph.html} />
+        ))}
+      </section>
+    ))}
+  </article>
+</Base>
+
+<style>
+  .legal {
+    max-width: 46rem;
+    padding-block: clamp(3rem, 5vw, 6rem);
+  }
+  .legal h1 { font-size: var(--text-h2); margin-bottom: 1rem; }
+  .legal__section h2 {
+    font-size: var(--text-h3);
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .legal p { color: var(--color-ink); line-height: 1.7; }
+  .legal :global(a) { color: var(--color-brand); }
+  .legal__note {
+    color: var(--color-muted);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    font-size: 0.9rem;
+  }
+  .legal__pending {
+    color: var(--color-green-ink);
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+</style>

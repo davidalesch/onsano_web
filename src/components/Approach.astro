@@ -17,8 +17,8 @@ const sysX = [64, 216, 368];
     <!-- The conceptual carrier: an intelligence layer on top of existing systems. -->
     <div class="approach__diagram">
       <svg viewBox="0 0 520 320" fill="none" xmlns="http://www.w3.org/2000/svg" role="img"
-           aria-label={`${t('approach.layerLabel')} — ${t('approach.systemsLabel')}`}>
-        <!-- connectors: dashes flow continuously — a live exchange, not a static line -->
+           aria-label={`${t('approach.layerLabel')}, ${t('approach.systemsLabel')}`}>
+        <!-- Connectors: dashes flow continuously, a live exchange rather than a static line. -->
         <g class="ap ap--link" stroke="var(--color-green-ink)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 8" opacity="0.6">
           <path d="M180 128 L108 216"/>
           <path d="M260 130 L260 216"/>
@@ -137,7 +137,7 @@ const sysX = [64, 216, 368];
 <script>
   // The "Onsano" icon+wordmark lockup is left-anchored in markup (fixed icon
   // position, text follows), so it doesn't sit centered in the pill on its
-  // own — measure its true rendered width and shift it, rather than guess a
+  // own. Measure its true rendered width and shift it, rather than guess a
   // fixed offset that would drift if the label or font ever changes.
   function centerOnsanoLabel() {
     const svg = document.querySelector('.approach__diagram svg');

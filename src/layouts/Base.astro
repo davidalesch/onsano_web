@@ -32,7 +32,7 @@ const { title, description, lang = 'en' } = Astro.props;
       <slot />
     </main>
     <Footer lang={lang} />
-    <CookieConsent />
+    <CookieConsent lang={lang} />
 
     <!-- Smooth scroll (Lenis) + scroll-reveal. Progressive enhancement:
          nothing here is required for content to be visible/accessible. -->

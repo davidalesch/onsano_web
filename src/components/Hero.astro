@@ -277,6 +277,7 @@ const t = useTranslations(lang);
   const outgoing = document.querySelector<HTMLElement>('[data-flow-out]');
   const spine = outgoing?.parentElement;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const mobileViewport = window.matchMedia('(max-width: 600px)');
 
   const clamp = (value: number) => Math.min(1, Math.max(0, value));
   let frame = 0;
@@ -289,8 +290,8 @@ const t = useTranslations(lang);
     const viewport = window.innerHeight;
     // Zero when the white field first touches the bottom of the viewport.
     const travelled = viewport - rect.top;
-    const incomingStart = viewport * 0.18;
-    const incomingEnd = viewport * 1.05;
+    const incomingStart = viewport * (mobileViewport.matches ? 0.24 : 0.18);
+    const incomingEnd = viewport * (mobileViewport.matches ? 2 : 1.05);
     const incomingProgress = clamp((travelled - incomingStart) / (incomingEnd - incomingStart));
 
     incoming.forEach((path, index) => {
@@ -318,4 +319,5 @@ const t = useTranslations(lang);
   window.addEventListener('scroll', scheduleFlow, { passive: true });
   window.addEventListener('resize', scheduleFlow, { passive: true });
   reduceMotion.addEventListener?.('change', scheduleFlow);
+  mobileViewport.addEventListener?.('change', scheduleFlow);
 </script>

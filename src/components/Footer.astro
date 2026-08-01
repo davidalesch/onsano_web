@@ -6,17 +6,20 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const year = new Date().getFullYear();
+const home = lang === 'en' ? '/' : `/${lang}/`;
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const onLegalPage = pathname.endsWith('/impressum') || pathname.endsWith('/datenschutz');
+const sectionHref = (id: string) => onLegalPage ? `${home}#${id}` : `#${id}`;
 
 const nav = [
-  { href: '#problem', label: t('nav.problem') },
-  { href: '#approach', label: t('nav.approach') },
-  { href: '#compliance', label: t('nav.compliance') },
-  { href: '#contact', label: t('nav.contact') },
+  { href: sectionHref('problem'), label: t('nav.problem') },
+  { href: sectionHref('approach'), label: t('nav.approach') },
+  { href: sectionHref('compliance'), label: t('nav.compliance') },
+  { href: sectionHref('contact'), label: t('nav.contact') },
 ];
-// Legal pages are German instruments — always in German.
 const legal = [
-  { href: '/impressum', label: 'Impressum' },
-  { href: '/datenschutz', label: 'Datenschutzerklärung' },
+  { href: `${home}impressum/`, label: t('legal.imprint') },
+  { href: `${home}datenschutz/`, label: t('legal.privacy') },
 ];
 ---
 <footer class="site-footer">
