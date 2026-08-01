@@ -279,28 +279,6 @@ const nav = [
       history.scrollRestoration = 'manual';
     });
   });
-
-  const savedScroll = sessionStorage.getItem(LANGUAGE_SCROLL_KEY);
-  if (savedScroll) {
-    sessionStorage.removeItem(LANGUAGE_SCROLL_KEY);
-    try {
-      const state = JSON.parse(savedScroll) as { top?: number; savedAt?: number };
-      if (typeof state.top === 'number' && typeof state.savedAt === 'number' && Date.now() - state.savedAt < 10000) {
-        history.scrollRestoration = 'manual';
-        const restoreLanguageScroll = () => {
-          const root = document.documentElement;
-          const previousScrollBehavior = root.style.scrollBehavior;
-          root.style.scrollBehavior = 'auto';
-          const maxScroll = Math.max(0, root.scrollHeight - window.innerHeight);
-          window.scrollTo(0, Math.max(0, Math.min(maxScroll, state.top!)));
-          window.requestAnimationFrame(() => { root.style.scrollBehavior = previousScrollBehavior; });
-        };
-        restoreLanguageScroll();
-      }
-    } catch {
-      // Ignore an invalid or stale position value.
-    }
-  }
   document.addEventListener('click', (e) => {
     if (langSwitch instanceof HTMLDetailsElement && langSwitch.open && !langSwitch.contains(e.target as Node)) {
       langSwitch.open = false;
