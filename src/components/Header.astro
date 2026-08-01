@@ -80,6 +80,7 @@ const nav = [
     align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
+    max-width: 88rem;
     height: var(--header-h);
   }
   .site-header__logo {
@@ -94,6 +95,13 @@ const nav = [
   :global(body:has([data-hero-dark])) .site-header:not([data-scrolled]),
   .site-header[data-on-dark] {
     --logo-gap: var(--color-brand);
+  }
+  .site-header[data-on-dark][data-dark-scrolled] {
+    background: color-mix(in srgb, var(--color-brand) 72%, transparent);
+    -webkit-backdrop-filter: saturate(145%) blur(14px);
+    backdrop-filter: saturate(145%) blur(14px);
+    border-bottom-color: rgb(255 255 255 / 0.08);
+    box-shadow: 0 8px 30px -24px rgb(11 15 20 / 0.5);
   }
   :global(body:has([data-hero-dark])) .site-header:not([data-scrolled]) .site-header__logo,
   .site-header[data-on-dark] .site-header__logo { color: #fff; }
@@ -223,8 +231,16 @@ const nav = [
   .site-header__cta { display: none; }
 
   @media (min-width: 900px) {
-    .site-header__nav { display: flex; }
     .site-header__cta { display: block; }
+  }
+  @media (min-width: 980px) {
+    .site-header__inner { position: relative; }
+    .site-header__nav {
+      position: absolute;
+      left: 50%;
+      display: flex;
+      transform: translateX(-50%);
+    }
   }
 </style>
 
@@ -239,6 +255,7 @@ const nav = [
     const isOverDark = darkHero instanceof HTMLElement && darkHero.getBoundingClientRect().bottom > headerHeight;
 
     header.toggleAttribute('data-on-dark', isOverDark);
+    header.toggleAttribute('data-dark-scrolled', isOverDark && window.scrollY > 6);
     header.toggleAttribute('data-scrolled', !isOverDark && window.scrollY > 4);
   };
   onScroll();

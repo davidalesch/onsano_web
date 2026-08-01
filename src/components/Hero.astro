@@ -16,8 +16,7 @@ const t = useTranslations(lang);
 
     <div class="container-page hero__statement-inner">
       <h1 class="hero__title">
-        <span class="hero__line">{t('hero.title.line1')}</span>
-        <span class="hero__line">{t('hero.title.line2')}</span>
+        <span class="hero__line">{t('hero.eyebrow')}</span>
       </h1>
       <p class="hero__subtitle">{t('hero.subtitle')}</p>
     </div>
@@ -154,7 +153,6 @@ const t = useTranslations(lang);
     --flow-converge-h: clamp(19rem, 39svh, 27rem);
     position: relative;
     z-index: 1;
-    min-height: clamp(64rem, 138svh, 82rem);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -173,7 +171,7 @@ const t = useTranslations(lang);
     pointer-events: none;
   }
   .hero__convergence path {
-    stroke-width: 1.5;
+    stroke-width: 2.1;
     stroke-linecap: round;
     vector-effect: non-scaling-stroke;
     stroke-dasharray: 1;
@@ -216,8 +214,8 @@ const t = useTranslations(lang);
     position: relative;
     z-index: 1;
     width: 1.5px;
-    min-height: 27rem;
-    flex: 1 1 auto;
+    height: clamp(7rem, calc(25svh - 3.5rem), 12.5rem);
+    flex: 0 0 auto;
     margin-top: 1.25rem;
   }
   .hero__spine span {
@@ -267,10 +265,9 @@ const t = useTranslations(lang);
     .hero__subtitle { max-width: 29ch; }
     .hero__value {
       --flow-converge-h: clamp(17rem, 36svh, 21rem);
-      min-height: 70rem;
     }
     .hero__lead { max-width: 31ch; }
-    .hero__convergence path { stroke-width: 1.25; }
+    .hero__convergence path { stroke-width: 1.7; }
   }
 </style>
 
@@ -278,6 +275,7 @@ const t = useTranslations(lang);
   const flow = document.querySelector('[data-hero-flow]');
   const incoming = Array.from(document.querySelectorAll<SVGPathElement>('[data-flow-in]'));
   const outgoing = document.querySelector<HTMLElement>('[data-flow-out]');
+  const spine = outgoing?.parentElement;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   const clamp = (value: number) => Math.min(1, Math.max(0, value));
@@ -291,8 +289,9 @@ const t = useTranslations(lang);
     const viewport = window.innerHeight;
     // Zero when the white field first touches the bottom of the viewport.
     const travelled = viewport - rect.top;
-    const incomingEnd = viewport * 0.78;
-    const incomingProgress = clamp(travelled / incomingEnd);
+    const incomingStart = viewport * 0.18;
+    const incomingEnd = viewport * 1.05;
+    const incomingProgress = clamp((travelled - incomingStart) / (incomingEnd - incomingStart));
 
     incoming.forEach((path, index) => {
       const delay = index * 0.018;
@@ -300,10 +299,12 @@ const t = useTranslations(lang);
       path.style.strokeDashoffset = String(1 - localProgress);
     });
 
-    // The resolved spine starts only after the paths have met. It finishes as
-    // the white hero field hands the page over to the Problem section.
-    const outgoingStart = incomingEnd + viewport * 0.12;
-    const outgoingEnd = Math.max(outgoingStart + 1, rect.height - viewport * 0.04);
+    // The resolved spine starts only after the paths have met. It keeps drawing
+    // through the handoff and finishes when the Problem section has moved
+    // halfway up the viewport, so the calm line never races ahead of the scroll.
+    const spineOffset = spine instanceof HTMLElement ? spine.offsetTop : incomingEnd;
+    const outgoingStart = spineOffset + viewport * 0.12;
+    const outgoingEnd = Math.max(outgoingStart + 1, rect.height + viewport * 0.5);
     const outgoingProgress = clamp((travelled - outgoingStart) / (outgoingEnd - outgoingStart));
     outgoing.style.transform = `scaleY(${outgoingProgress})`;
   }
