@@ -8,13 +8,12 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
 <section class="hero" data-hero>
-  <!-- Brand gradient wash. -->
-  <div class="hero__bg" aria-hidden="true">
-    <div class="hero__wash"></div>
-  </div>
+  <!-- The opening is one exact viewport: a calm, saturated brand field. -->
+  <div class="hero__statement" data-hero-dark>
+    <div class="hero__bg" aria-hidden="true">
+      <div class="hero__wash"></div>
+    </div>
 
-  <!-- Beat 1: the held statement — all you see on load. -->
-  <div class="hero__statement">
     <div class="container-page hero__statement-inner">
       <h1 class="hero__title">
         <span class="hero__line">{t('hero.title.line1')}</span>
@@ -22,21 +21,54 @@ const t = useTranslations(lang);
       </h1>
       <p class="hero__subtitle">{t('hero.subtitle')}</p>
     </div>
+
     <a href="#value" class="hero__scroll" aria-label={t('hero.scroll')}>
       <span>{t('hero.scroll')}</span>
       <ChevronDown width={18} height={18} stroke-width={2} aria-hidden="true" />
     </a>
   </div>
 
-  <!-- Beat 2: supporting value block — reveals with scroll as you leave beat 1. -->
-  <div class="container-page hero__value" id="value">
-    <p class="hero__eyebrow sd-rise" style="--sd-range: entry 1% cover 16%">
-      <Layers width={16} height={16} stroke-width={2} aria-hidden="true" />
-      <span>{t('hero.eyebrow')}</span>
-    </p>
-    <p class="hero__lead sd-rise" style="--sd-range: entry 3% cover 18%">{t('hero.lead')}</p>
-    <div class="hero__cta sd-rise" style="--sd-range: cover 6% cover 32%">
-      <CalButton label={t('cta.call')} />
+  <!-- Fragmented paths leave the blue edge and resolve into one calm spine. -->
+  <div class="hero__value" id="value" data-hero-flow>
+    <svg
+      class="hero__convergence"
+      viewBox="0 0 1200 1000"
+      preserveAspectRatio="none"
+      fill="none"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id={`flow-blue-${lang}`} x1="0" y1="0" x2="0" y2="1000" gradientUnits="userSpaceOnUse">
+          <stop stop-color="var(--color-brand)" stop-opacity="0.18" />
+          <stop offset="1" stop-color="var(--color-brand)" stop-opacity="0.78" />
+        </linearGradient>
+        <linearGradient id={`flow-green-${lang}`} x1="0" y1="0" x2="0" y2="1000" gradientUnits="userSpaceOnUse">
+          <stop stop-color="var(--color-brand-green)" stop-opacity="0.2" />
+          <stop offset="1" stop-color="var(--color-green-ink)" stop-opacity="0.72" />
+        </linearGradient>
+      </defs>
+
+      <path data-flow-in pathLength="1" d="M0 0 C150 150 236 438 600 1000" stroke={`url(#flow-blue-${lang})`} />
+      <path data-flow-in pathLength="1" d="M190 0 C252 224 388 510 600 1000" stroke={`url(#flow-green-${lang})`} />
+      <path data-flow-in pathLength="1" d="M410 0 C422 292 516 604 600 1000" stroke={`url(#flow-blue-${lang})`} />
+      <path data-flow-in pathLength="1" d="M790 0 C778 292 684 604 600 1000" stroke={`url(#flow-green-${lang})`} />
+      <path data-flow-in pathLength="1" d="M1010 0 C948 224 812 510 600 1000" stroke={`url(#flow-blue-${lang})`} />
+      <path data-flow-in pathLength="1" d="M1200 0 C1050 150 964 438 600 1000" stroke={`url(#flow-green-${lang})`} />
+    </svg>
+
+    <div class="container-page hero__value-content">
+      <p class="hero__eyebrow">
+        <Layers width={16} height={16} stroke-width={2} aria-hidden="true" />
+        <span>{t('hero.eyebrow')}</span>
+      </p>
+      <p class="hero__lead">{t('hero.lead')}</p>
+      <div class="hero__cta">
+        <CalButton label={t('cta.call')} />
+      </div>
+    </div>
+
+    <div class="hero__spine" aria-hidden="true">
+      <span data-flow-out></span>
     </div>
   </div>
 </section>
@@ -44,70 +76,64 @@ const t = useTranslations(lang);
 <style>
   .hero {
     position: relative;
-    /* Cancel main's top padding so the gradient wash reaches true page-top,
-       behind the fixed/transparent header, instead of starting below it. */
     margin-top: calc(-1 * var(--header-h));
   }
 
-  /* --- Background: gradient wash + subtle squares --- */
-  .hero__bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    overflow: hidden;
-    pointer-events: none;
-    /* Deliberately a hard edge, not a fade: the wash fills the hero
-       completely, then cuts clean to white right where the hero's content
-       naturally ends. */
-  }
-  .hero__wash {
-    position: absolute;
-    inset: -10%;
-    background:
-      radial-gradient(48% 44% at 22% 26%,
-        color-mix(in srgb, var(--color-brand) 20%, transparent), transparent 70%),
-      radial-gradient(46% 46% at 82% 72%,
-        color-mix(in srgb, var(--color-brand-green) 26%, transparent), transparent 72%),
-      radial-gradient(40% 40% at 60% 8%,
-        color-mix(in srgb, var(--color-brand-green) 12%, transparent), transparent 70%);
-    filter: blur(10px);
-  }
-  /* --- Beat 1: statement --- */
+  /* --- Opening viewport -------------------------------------------------- */
   .hero__statement {
     position: relative;
-    z-index: 1;
     min-height: 100svh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
     text-align: center;
+    background: var(--color-brand);
+    --logo-gap: var(--color-brand);
   }
-  .hero__statement-inner { will-change: opacity, transform; }
-
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .hero__wash {
+    position: absolute;
+    inset: -14%;
+    background:
+      radial-gradient(48% 50% at 18% 24%, rgb(255 255 255 / 0.15), transparent 72%),
+      radial-gradient(50% 54% at 84% 72%, color-mix(in srgb, var(--color-brand-green) 42%, transparent), transparent 70%),
+      radial-gradient(34% 40% at 58% 4%, rgb(255 255 255 / 0.08), transparent 74%);
+    filter: blur(12px);
+  }
+  .hero__statement-inner {
+    position: relative;
+    z-index: 1;
+    will-change: opacity, transform;
+  }
   .hero__title {
     font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.02em;
-    color: var(--color-brand);
+    letter-spacing: -0.025em;
+    color: #fff;
     font-size: clamp(2.75rem, 1.6rem + 4.6vw, 4.5rem);
     line-height: 1.08;
     max-width: min(100%, 66rem);
     margin: 0 auto;
   }
   .hero__line { display: block; }
-
   .hero__subtitle {
     font-family: var(--font-body);
-    font-size: 1.25rem;
+    font-size: clamp(1.0625rem, 0.98rem + 0.38vw, 1.25rem);
     font-weight: 500;
     letter-spacing: 0.01em;
-    color: var(--color-green-ink);
+    color: rgb(255 255 255 / 0.82);
     margin: 1.25rem auto 0;
   }
-
   .hero__scroll {
     position: absolute;
+    z-index: 1;
     bottom: 2.25rem;
     left: 50%;
     transform: translateX(-50%);
@@ -115,92 +141,180 @@ const t = useTranslations(lang);
     flex-direction: column;
     align-items: center;
     gap: 0.35rem;
-    color: var(--color-muted);
+    color: rgb(255 255 255 / 0.68);
     text-decoration: none;
     font-size: 0.8125rem;
     letter-spacing: 0.02em;
     transition: color var(--dur-fast) var(--ease-out);
   }
-  .hero__scroll:hover { color: var(--color-brand); }
+  .hero__scroll:hover { color: #fff; }
 
-  /* --- Beat 2: value block --- */
+  /* --- Scroll-linked convergence --------------------------------------- */
   .hero__value {
+    --flow-converge-h: clamp(19rem, 39svh, 27rem);
     position: relative;
     z-index: 1;
+    min-height: clamp(64rem, 138svh, 82rem);
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
+    padding-top: calc(var(--flow-converge-h) - 1.1rem);
+    background: var(--color-bg);
+  }
+  .hero__convergence {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--flow-converge-h);
+    overflow: visible;
+    pointer-events: none;
+  }
+  .hero__convergence path {
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .hero__value-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: none;
     text-align: center;
-    gap: 1.5rem;
-    /* Top padding: standard rhythm plus a deliberate extra push, so the lead
-       paragraph sits far enough down that the statement's subtitle (still
-       fading out above) is fully gone by the time this block is in view.
-       Bottom padding: calibrated (from measured layout) so the wash's hard
-       cutoff reaches the bottom of the viewport at the exact moment the lead
-       paragraph is vertically centred on screen — one more scroll past that
-       point reveals the cut to white, not before. */
-    padding-block: calc(clamp(1rem, 4vw, 4rem) + 2.5rem) clamp(4rem, calc(50svh - 131px), 24rem);
   }
   .hero__eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.4rem 0.85rem;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--color-green-ink) 14%, transparent);
     border-radius: var(--radius-pill);
     background: var(--color-green-100);
+    box-shadow: 0 8px 24px -20px rgb(11 15 20 / 0.45);
     color: var(--color-green-ink);
     font-family: var(--font-display);
     font-size: 0.8125rem;
     font-weight: 500;
     letter-spacing: 0.01em;
+    margin: 0;
   }
   .hero__lead {
     font-size: var(--text-lead);
     line-height: 1.55;
     color: var(--color-muted);
     max-width: 46ch;
-    margin: 0 auto;
+    margin: 1.5rem auto 0;
+  }
+  .hero__cta { margin-top: 1.5rem; }
+  .hero__spine {
+    position: relative;
+    z-index: 1;
+    width: 1.5px;
+    min-height: 27rem;
+    flex: 1 1 auto;
+    margin-top: 1.25rem;
+  }
+  .hero__spine span {
+    position: absolute;
+    inset: 0;
+    display: block;
+    border-radius: var(--radius-pill) var(--radius-pill) 0 0;
+    background: linear-gradient(to bottom, var(--color-green-ink), var(--color-brand));
+    box-shadow: 0 0 12px color-mix(in srgb, var(--color-brand-green) 28%, transparent);
+    transform: scaleY(0);
+    transform-origin: top center;
+    will-change: transform;
   }
 
-  /* --- Motion --- */
+  /* --- Motion ------------------------------------------------------------ */
   @media (prefers-reduced-motion: no-preference) {
     .hero__scroll svg { animation: nudge 2.4s var(--ease-out) 1.2s infinite; }
-    .hero__wash { animation: wash-drift 26s ease-in-out infinite alternate; }
+    .hero__wash { animation: wash-drift 24s ease-in-out infinite alternate; }
 
-    /* Statement recedes as you scroll the first viewport (JS-free, scroll-linked).
-       Chromium/most Chrome+Edge users get this; others just keep it static. */
     @supports (animation-timeline: scroll()) {
       .hero__statement-inner {
         animation: statement-recede linear both;
         animation-timeline: scroll(root);
-        animation-range: 0 85svh;
+        animation-range: 0 82svh;
       }
     }
-
-    /* Tied to the cue's OWN position, not an arbitrary page-scroll amount —
-       it starts near the bottom of the first screen, so it needs to travel
-       roughly half a viewport before it's anywhere near the middle. "cover"
-       tracks its actual journey through the viewport, finishing the fade
-       just as it crosses the vertical centre. */
-    @supports (animation-timeline: view()) {
-      .hero__scroll {
-        animation: cue-fade linear both;
-        animation-timeline: view();
-        animation-range: cover 25% cover 45%;
-      }
-    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__convergence path { stroke-dashoffset: 0; }
+    .hero__spine span { transform: scaleY(1); }
   }
 
   @keyframes statement-recede {
-    to { opacity: 0; transform: translateY(-4vh) scale(0.965); filter: blur(3px); }
+    to { opacity: 0; transform: translateY(-3vh) scale(0.975); filter: blur(2px); }
   }
-  @keyframes cue-fade { to { opacity: 0; transform: translate(-50%, 12px); } }
   @keyframes nudge {
-    0%, 100% { transform: translateY(0); opacity: 0.85; }
+    0%, 100% { transform: translateY(0); opacity: 0.8; }
     50% { transform: translateY(3px); opacity: 1; }
   }
   @keyframes wash-drift {
     from { transform: translate3d(0, 0, 0) scale(1); }
     to { transform: translate3d(-3%, 2%, 0) scale(1.08); }
   }
+
+  @media (max-width: 600px) {
+    .hero__statement-inner { padding-inline: 1.25rem; }
+    .hero__subtitle { max-width: 29ch; }
+    .hero__value {
+      --flow-converge-h: clamp(17rem, 36svh, 21rem);
+      min-height: 70rem;
+    }
+    .hero__lead { max-width: 31ch; }
+    .hero__convergence path { stroke-width: 1.25; }
+  }
 </style>
+
+<script>
+  const flow = document.querySelector('[data-hero-flow]');
+  const incoming = Array.from(document.querySelectorAll<SVGPathElement>('[data-flow-in]'));
+  const outgoing = document.querySelector<HTMLElement>('[data-flow-out]');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const clamp = (value: number) => Math.min(1, Math.max(0, value));
+  let frame = 0;
+
+  function renderFlow() {
+    frame = 0;
+    if (!(flow instanceof HTMLElement) || !outgoing || reduceMotion.matches) return;
+
+    const rect = flow.getBoundingClientRect();
+    const viewport = window.innerHeight;
+    // Zero when the white field first touches the bottom of the viewport.
+    const travelled = viewport - rect.top;
+    const incomingEnd = viewport * 0.78;
+    const incomingProgress = clamp(travelled / incomingEnd);
+
+    incoming.forEach((path, index) => {
+      const delay = index * 0.018;
+      const localProgress = clamp((incomingProgress - delay) / (1 - delay));
+      path.style.strokeDashoffset = String(1 - localProgress);
+    });
+
+    // The resolved spine starts only after the paths have met. It finishes as
+    // the white hero field hands the page over to the Problem section.
+    const outgoingStart = incomingEnd + viewport * 0.12;
+    const outgoingEnd = Math.max(outgoingStart + 1, rect.height - viewport * 0.04);
+    const outgoingProgress = clamp((travelled - outgoingStart) / (outgoingEnd - outgoingStart));
+    outgoing.style.transform = `scaleY(${outgoingProgress})`;
+  }
+
+  function scheduleFlow() {
+    if (frame) return;
+    frame = window.requestAnimationFrame(renderFlow);
+  }
+
+  renderFlow();
+  window.addEventListener('scroll', scheduleFlow, { passive: true });
+  window.addEventListener('resize', scheduleFlow, { passive: true });
+  reduceMotion.addEventListener?.('change', scheduleFlow);
+</script>

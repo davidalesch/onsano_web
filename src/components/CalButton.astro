@@ -49,9 +49,9 @@ const { label, variant = 'solid', class: className = '' } = Astro.props;
      instead of losing the background/color tie back to the variant rules. */
   .cal-btn.solid:hover,
   .cal-btn.ghost:hover {
-    background: transparent;
-    color: var(--color-green-ink);
-    border-color: var(--color-brand-green);
+    background: var(--btn-hover-bg, transparent);
+    color: var(--btn-hover-fg, var(--color-green-ink));
+    border-color: var(--btn-hover-border, var(--color-brand-green));
   }
   .cal-btn:active {
     transform: translateY(0);
