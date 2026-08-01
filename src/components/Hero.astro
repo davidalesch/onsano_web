@@ -30,12 +30,12 @@ const t = useTranslations(lang);
 
   <!-- Beat 2: supporting value block — reveals with scroll as you leave beat 1. -->
   <div class="container-page hero__value" id="value">
-    <p class="hero__eyebrow sd-rise" style="--sd-range: entry 1% cover 20%">
+    <p class="hero__eyebrow sd-rise" style="--sd-range: entry 1% cover 16%">
       <Layers width={16} height={16} stroke-width={2} aria-hidden="true" />
       <span>{t('hero.eyebrow')}</span>
     </p>
-    <p class="hero__lead sd-rise" style="--sd-range: entry 4% cover 26%">{t('hero.lead')}</p>
-    <div class="hero__cta sd-rise" style="--sd-range: entry 8% cover 32%">
+    <p class="hero__lead sd-rise" style="--sd-range: entry 3% cover 18%">{t('hero.lead')}</p>
+    <div class="hero__cta sd-rise" style="--sd-range: cover 6% cover 32%">
       <CalButton label={t('cta.call')} />
     </div>
   </div>
@@ -56,6 +56,9 @@ const t = useTranslations(lang);
     z-index: 0;
     overflow: hidden;
     pointer-events: none;
+    /* Deliberately a hard edge, not a fade: the wash fills the hero
+       completely, then cuts clean to white right where the hero's content
+       naturally ends. */
   }
   .hero__wash {
     position: absolute;
@@ -129,7 +132,14 @@ const t = useTranslations(lang);
     align-items: center;
     text-align: center;
     gap: 1.5rem;
-    padding-block: clamp(1rem, 4vw, 4rem) var(--spacing-section);
+    /* Top padding: standard rhythm plus a deliberate extra push, so the lead
+       paragraph sits far enough down that the statement's subtitle (still
+       fading out above) is fully gone by the time this block is in view.
+       Bottom padding: calibrated (from measured layout) so the wash's hard
+       cutoff reaches the bottom of the viewport at the exact moment the lead
+       paragraph is vertically centred on screen — one more scroll past that
+       point reveals the cut to white, not before. */
+    padding-block: calc(clamp(1rem, 4vw, 4rem) + 2.5rem) clamp(4rem, calc(50svh - 131px), 24rem);
   }
   .hero__eyebrow {
     display: inline-flex;
@@ -165,10 +175,18 @@ const t = useTranslations(lang);
         animation-timeline: scroll(root);
         animation-range: 0 85svh;
       }
+    }
+
+    /* Tied to the cue's OWN position, not an arbitrary page-scroll amount —
+       it starts near the bottom of the first screen, so it needs to travel
+       roughly half a viewport before it's anywhere near the middle. "cover"
+       tracks its actual journey through the viewport, finishing the fade
+       just as it crosses the vertical centre. */
+    @supports (animation-timeline: view()) {
       .hero__scroll {
         animation: cue-fade linear both;
-        animation-timeline: scroll(root);
-        animation-range: 0 30svh;
+        animation-timeline: view();
+        animation-range: cover 25% cover 45%;
       }
     }
   }
