@@ -190,8 +190,9 @@ html.js-reveal [data-reveal].is-visible {
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .sd-rise {
-      animation: sd-rise linear both;
-      animation-timeline: view();
+      animation: sd-rise 1ms linear both;
+      /* Keep the timeline out of the shorthand during production minification. */
+      animation-timeline: view() !important;
       animation-range: var(--sd-range, entry 4% cover 26%);
       will-change: opacity, transform, filter;
     }

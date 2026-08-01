@@ -203,20 +203,21 @@ const stagger = (i: number) => ({ start: 6 + i * 12, end: 34 + i * 14 });
 	@supports (animation-timeline: view()) {
 		@media (prefers-reduced-motion: no-preference) {
 			.gap-fill {
-				animation: close-gap-halt linear both;
-				animation-timeline: --case-integrity;
+				animation: close-gap-halt 1ms linear both;
+				/* Keep the timeline out of the shorthand during production minification. */
+				animation-timeline: --case-integrity !important;
 				animation-range: var(--s) var(--e);
 			}
 
 			.warn {
-				animation: warn-in linear both;
-				animation-timeline: --case-integrity;
+				animation: warn-in 1ms linear both;
+				animation-timeline: --case-integrity !important;
 				animation-range: var(--s) var(--e);
 			}
 
 			.seal {
-				animation: trace-unsealed linear both;
-				animation-timeline: --case-integrity;
+				animation: trace-unsealed 1ms linear both;
+				animation-timeline: --case-integrity !important;
 				animation-range: entry 10% cover 88%;
 			}
 		}

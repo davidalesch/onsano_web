@@ -237,8 +237,9 @@ const t = useTranslations(lang);
 
     @supports (animation-timeline: scroll()) {
       .hero__statement-inner {
-        animation: statement-recede linear both;
-        animation-timeline: scroll(root);
+        animation: statement-recede 1ms linear both;
+        /* Keep the timeline out of the shorthand during production minification. */
+        animation-timeline: scroll(root) !important;
         animation-range: 0 82svh;
       }
     }

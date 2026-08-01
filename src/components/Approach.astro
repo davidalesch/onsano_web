@@ -108,7 +108,14 @@ const sysX = [64, 216, 368];
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
       .approach__diagram { view-timeline: --ap block; }
-      .ap { animation: linear both; animation-timeline: --ap; will-change: transform, opacity; }
+      .ap {
+        animation-duration: 1ms;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        /* Keep the timeline out of the shorthand during production minification. */
+        animation-timeline: --ap !important;
+        will-change: transform, opacity;
+      }
       .ap--layer { animation-name: ap-drop; animation-range: entry 8% cover 44%; }
       .ap--sys { animation-name: ap-rise; animation-range: entry 14% cover 52%; }
       .ap--link { animation-name: ap-fade; animation-range: entry 30% cover 58%; }
