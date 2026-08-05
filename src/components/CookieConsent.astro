@@ -6,16 +6,28 @@
  *
  * TODO: replace GA_MEASUREMENT_ID with the real GA4 id once provisioned.
  */
+import { type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
 const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+const home = lang === 'en' ? '/' : `/${lang}/`;
+const copy = {
+  en: { text: 'We use analytics cookies to understand how the site is used. They load only if you accept.', policy: 'Privacy policy', decline: 'Decline', accept: 'Accept' },
+  de: { text: 'Wir verwenden Analyse-Cookies, um die Nutzung der Website zu verstehen. Sie werden nur mit Ihrer Zustimmung geladen.', policy: 'Datenschutzerklärung', decline: 'Ablehnen', accept: 'Akzeptieren' },
+  fr: { text: 'Nous utilisons des cookies analytiques pour comprendre comment le site est utilisé. Ils ne sont chargés qu’avec votre accord.', policy: 'Politique de confidentialité', decline: 'Refuser', accept: 'Accepter' },
+  nl: { text: 'We gebruiken analysecookies om te begrijpen hoe de site wordt gebruikt. Ze worden alleen geladen als u toestemming geeft.', policy: 'Privacyverklaring', decline: 'Weigeren', accept: 'Accepteren' },
+  it: { text: 'Utilizziamo cookie analitici per capire come viene usato il sito. Vengono caricati solo con il tuo consenso.', policy: 'Informativa sulla privacy', decline: 'Rifiuta', accept: 'Accetta' },
+  es: { text: 'Usamos cookies analíticas para entender cómo se utiliza el sitio. Solo se cargan si usted acepta.', policy: 'Política de privacidad', decline: 'Rechazar', accept: 'Aceptar' },
+}[lang];
 ---
 <div class="consent" data-consent hidden>
   <p class="consent__text">
-    We use analytics cookies to understand how the site is used. They load only if you accept.
-    See our <a href="/datenschutz">Datenschutzerklärung</a>.
+    {copy.text} <a href={`${home}datenschutz/`}>{copy.policy}</a>.
   </p>
   <div class="consent__actions">
-    <button type="button" data-consent-decline class="consent__btn ghost">Decline</button>
-    <button type="button" data-consent-accept class="consent__btn solid">Accept</button>
+    <button type="button" data-consent-decline class="consent__btn ghost">{copy.decline}</button>
+    <button type="button" data-consent-accept class="consent__btn solid">{copy.accept}</button>
   </div>
 </div>
 

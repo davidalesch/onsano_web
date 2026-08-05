@@ -1,4 +1,5 @@
 ---
+import Logo from './Logo.astro';
 import { useTranslations, type Lang } from '../i18n/ui';
 
 interface Props { lang: Lang }
@@ -17,8 +18,8 @@ const sysX = [64, 216, 368];
     <!-- The conceptual carrier: an intelligence layer on top of existing systems. -->
     <div class="approach__diagram">
       <svg viewBox="0 0 520 320" fill="none" xmlns="http://www.w3.org/2000/svg" role="img"
-           aria-label={`${t('approach.layerLabel')} — ${t('approach.systemsLabel')}`}>
-        <!-- connectors: dashes flow continuously — a live exchange, not a static line -->
+           aria-label={`${t('approach.layerLabel')}, ${t('approach.systemsLabel')}`}>
+        <!-- Connectors: dashes flow continuously, a live exchange rather than a static line. -->
         <g class="ap ap--link" stroke="var(--color-green-ink)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 8" opacity="0.6">
           <path d="M180 128 L108 216"/>
           <path d="M260 130 L260 216"/>
@@ -38,11 +39,11 @@ const sysX = [64, 216, 368];
         <!-- the Onsano layer sitting on top (drops in) -->
         <g class="ap ap--layer">
           <rect class="ap-layer-box" x="120" y="40" width="280" height="88" rx="24" fill="var(--color-brand)"/>
-          <g class="ap-layer-content">
-            <rect x="150" y="70" width="26" height="26" rx="7" fill="none" stroke="#fff" stroke-width="2.4" opacity="0.65" transform="translate(-6 6)"/>
-            <rect x="150" y="70" width="26" height="26" rx="7" fill="#fff"/>
-            <text x="196" y="92" class="ap__label">{t('approach.layerLabel')}</text>
-          </g>
+          <foreignObject x="186" y="66" width="148" height="36">
+            <div xmlns="http://www.w3.org/1999/xhtml" class="ap__logo" aria-hidden="true">
+              <Logo class="ap__logo-lockup" title="Onsano" />
+            </div>
+          </foreignObject>
         </g>
       </svg>
     </div>
@@ -85,13 +86,16 @@ const sysX = [64, 216, 368];
   }
   .approach__diagram svg { width: 100%; height: auto; display: block; }
 
-  .ap__label {
-    fill: #fff;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 26px;
-    letter-spacing: -0.01em;
+  .ap__logo {
+    --logo-gap: var(--color-brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: #fff;
   }
+  .ap__logo :global(.ap__logo-lockup) { display: block; width: 100%; height: auto; }
   .ap__sys-label {
     fill: var(--color-muted);
     font-family: var(--font-display);
@@ -104,7 +108,14 @@ const sysX = [64, 216, 368];
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
       .approach__diagram { view-timeline: --ap block; }
-      .ap { animation: linear both; animation-timeline: --ap; will-change: transform, opacity; }
+      .ap {
+        animation-duration: 1ms;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        /* Keep the timeline out of the shorthand during production minification. */
+        animation-timeline: --ap !important;
+        will-change: transform, opacity;
+      }
       .ap--layer { animation-name: ap-drop; animation-range: entry 8% cover 44%; }
       .ap--sys { animation-name: ap-rise; animation-range: entry 14% cover 52%; }
       .ap--link { animation-name: ap-fade; animation-range: entry 30% cover 58%; }
@@ -133,29 +144,3 @@ const sysX = [64, 216, 368];
     to { stroke-dashoffset: -10; }
   }
 </style>
-
-<script>
-  // The "Onsano" icon+wordmark lockup is left-anchored in markup (fixed icon
-  // position, text follows), so it doesn't sit centered in the pill on its
-  // own — measure its true rendered width and shift it, rather than guess a
-  // fixed offset that would drift if the label or font ever changes.
-  function centerOnsanoLabel() {
-    const svg = document.querySelector('.approach__diagram svg');
-    if (!(svg instanceof SVGSVGElement)) return;
-    const box = svg.querySelector('.ap-layer-box');
-    const content = svg.querySelector('.ap-layer-content');
-    if (!(box instanceof SVGGraphicsElement) || !(content instanceof SVGGraphicsElement)) return;
-
-    content.removeAttribute('transform');
-    const boxBBox = box.getBBox();
-    const contentBBox = content.getBBox();
-    const dx = (boxBBox.x + boxBBox.width / 2) - (contentBBox.x + contentBBox.width / 2);
-    content.setAttribute('transform', `translate(${dx.toFixed(2)}, 0)`);
-  }
-
-  if (document.fonts?.ready) {
-    document.fonts.ready.then(centerOnsanoLabel);
-  } else {
-    centerOnsanoLabel();
-  }
-</script>

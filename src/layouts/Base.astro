@@ -24,6 +24,35 @@ const { title, description, lang = 'en' } = Astro.props;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <!-- Prepare a language change before the browser can paint the destination
+         at the top. The matching script at the end of the body reveals it only
+         after the saved coordinates have been applied. -->
+    <script is:inline>
+      (() => {
+        const key = 'onsano-language-scroll';
+        try {
+          const raw = sessionStorage.getItem(key);
+          if (!raw) return;
+          const state = JSON.parse(raw);
+          const valid = typeof state.top === 'number'
+            && typeof state.savedAt === 'number'
+            && Date.now() - state.savedAt < 10000;
+          if (!valid) {
+            sessionStorage.removeItem(key);
+            return;
+          }
+          history.scrollRestoration = 'manual';
+          document.documentElement.dataset.languageScrollRestore = '';
+          document.documentElement.style.scrollBehavior = 'auto';
+          document.documentElement.style.visibility = 'hidden';
+          window.setTimeout(() => {
+            document.documentElement.style.removeProperty('visibility');
+          }, 1500);
+        } catch {
+          sessionStorage.removeItem(key);
+        }
+      })();
+    </script>
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
@@ -32,7 +61,33 @@ const { title, description, lang = 'en' } = Astro.props;
       <slot />
     </main>
     <Footer lang={lang} />
-    <CookieConsent />
+    <CookieConsent lang={lang} />
+
+    <!-- This runs synchronously after the page has its full height but before
+         deferred modules, including Lenis, initialise. -->
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        if (!root.hasAttribute('data-language-scroll-restore')) return;
+
+        const key = 'onsano-language-scroll';
+        try {
+          const state = JSON.parse(sessionStorage.getItem(key) || '{}');
+          sessionStorage.removeItem(key);
+          const maxScroll = Math.max(0, root.scrollHeight - window.innerHeight);
+          const top = Math.max(0, Math.min(maxScroll, state.top));
+          window.scrollTo({ left: 0, top, behavior: 'instant' });
+        } catch {
+          sessionStorage.removeItem(key);
+        }
+
+        root.removeAttribute('data-language-scroll-restore');
+        root.style.removeProperty('visibility');
+        window.requestAnimationFrame(() => {
+          root.style.removeProperty('scroll-behavior');
+        });
+      })();
+    </script>
 
     <!-- Smooth scroll (Lenis) + scroll-reveal. Progressive enhancement:
          nothing here is required for content to be visible/accessible. -->

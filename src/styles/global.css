@@ -1,13 +1,20 @@
 /* =============================================================================
-   Onsano — global stylesheet & design tokens
+   Onsano global stylesheet and design tokens
    Single source of truth for colour, type, spacing, motion.
    Change a value here and it propagates across the whole site.
    ============================================================================= */
 
-/* Self-hosted fonts (GDPR: never load Google Fonts CDN — IP transfer under
+/* Self-hosted fonts (GDPR: never load Google Fonts CDN because IP transfer under
    German case law). Variable fonts, full Latin incl. German ß/umlauts. */
 @import '@fontsource-variable/geist';
 @import '@fontsource-variable/inter';
+@import '@fontsource-variable/instrument-sans';
+@import '@fontsource-variable/manrope';
+@import '@fontsource-variable/source-sans-3';
+@import '@fontsource-variable/ibm-plex-sans';
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
 @import 'tailwindcss';
 
 @theme {
@@ -20,17 +27,17 @@
   --color-ink: #0b0f14;              /* body text (near-black)            ~19:1  */
   --color-muted: #4c5c70;            /* muted / secondary text            ~6.8:1 */
 
-  --color-brand: #355270;            /* PRIMARY blue — titles, links, UI  ~8.1:1 */
+  --color-brand: #355270;            /* PRIMARY blue for titles, links, UI  ~8.1:1 */
   --color-brand-700: #294152;        /* darker blue for hover/pressed             */
   --color-brand-100: #e7edf3;        /* blue tint for chips/soft fills            */
 
-  --color-brand-green: #5faf8c;      /* light green — FILLS/LOGO ONLY     2.6:1 ✗ */
+  --color-brand-green: #5faf8c;      /* light green for FILLS/LOGO ONLY     2.6:1 ✗ */
   --color-green-ink: #3f7d63;        /* green for TEXT/icons on white     ~4.9:1 ✓ */
   --color-green-100: #e5f1eb;        /* green tint for soft fills                 */
 
   --color-border: #e4e9ee;           /* hairlines, card edges */
 
-  --color-danger: #b3402f;           /* muted red — decorative "at risk" signal ~5.7:1 */
+  --color-danger: #b3402f;           /* muted red for decorative "at risk" signal ~5.7:1 */
 
   /* Mark uses this as the "gap" colour between the two squares.
      Set to the current section background so the notch reads correctly. */
@@ -38,7 +45,7 @@
 
   /* ---- Typography ---------------------------------------------------------
      Display = Geist (geometric grotesque). Body = Inter. */
-  --font-display: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
   --font-body: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
 
   /* Fluid type scale (mobile min → desktop max) */
@@ -59,7 +66,7 @@
      8px grid. Section rhythm is fluid: 64px mobile → 160px desktop. */
   --spacing-section: clamp(4rem, 2rem + 8vw, 10rem);      /* 64 → 160 */
   --spacing-gutter: clamp(1.25rem, 0.5rem + 3vw, 2rem);   /* page side padding */
-  --header-h: 4.5rem; /* fixed header height — used to offset content below it */
+  --header-h: 4.5rem; /* fixed header height used to offset content below it */
 
   /* ---- Radii -------------------------------------------------------------- */
   --radius-sm: 0.5rem;
@@ -68,7 +75,7 @@
   --radius-pill: 999px;
 
   /* ---- Motion -------------------------------------------------------------
-     Ease-out only, no bounce/elastic — matches the factual, no-bs register. */
+     Ease-out only, no bounce/elastic, matching the factual, no-bs register. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-fast: 200ms;    /* UI micro-interactions */
   --dur-slow: 520ms;    /* scroll-triggered reveals */
@@ -131,7 +138,7 @@
   padding-inline: var(--spacing-gutter);
 }
 
-/* Logo sizing utility — global (unscoped) so it reaches the child <svg>.
+/* Logo sizing utility, global (unscoped) so it reaches the child <svg>.
    Colour is inherited from the parent via currentColor. */
 .logo {
   display: block;
@@ -167,7 +174,7 @@ html.js-reveal [data-reveal].is-visible {
 /* --- Scroll-DRIVEN reveals (linked to scroll position, not a one-shot) -----
    Content animates in proportion to scroll progress as it enters the viewport.
    Chromium supports view() timelines; elsewhere content is simply visible.
-   Pure CSS — works without JS, disabled under reduced-motion. */
+   Pure CSS, works without JS and is disabled under reduced-motion. */
 @keyframes sd-rise {
   from {
     opacity: 0;
@@ -183,8 +190,9 @@ html.js-reveal [data-reveal].is-visible {
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .sd-rise {
-      animation: sd-rise linear both;
-      animation-timeline: view();
+      animation: sd-rise 1ms linear both;
+      /* Keep the timeline out of the shorthand during production minification. */
+      animation-timeline: view() !important;
       animation-range: var(--sd-range, entry 4% cover 26%);
       will-change: opacity, transform, filter;
     }

@@ -3,16 +3,16 @@
  * The shared abstract visual (design-guide.md §6), adapted for the Problem
  * section: a case sheet showing an audit trail of documentation entries.
  * Three entries carry gaps. As the section scrolls into view the gaps start
- * to close in brand green — but stop partway and turn the muted danger red,
+ * to close in brand green, but stop partway and turn the muted danger red,
  * with a warning marker in place of a checkmark: the documentation never
  * gets completed, which is exactly what puts the case at risk. The outer
- * frame echoes the same idea — it starts tracing a seal, but the seal never
+ * frame echoes the same idea. It starts tracing a seal, but the seal never
  * closes.
  *
  * The frame is a rounded square echoing the Onsano mark, so the figure reads
  * as part of the identity rather than generic startup geometry.
  *
- * No numbers, no product UI, no stock imagery — nothing here asserts a fact.
+ * No numbers, no product UI, no stock imagery. Nothing here asserts a fact.
  */
 interface Props {
 	class?: string;
@@ -177,7 +177,7 @@ const stagger = (i: number) => ({ start: 6 + i * 12, end: 34 + i * 14 });
 <style>
 	/* Default state is the HALTED one, so browsers without scroll-driven
 	   animation support (and reduced-motion users) get the true resting
-	   state — an at-risk case — rather than an animation's mid-frame. */
+	   state, an at-risk case, rather than an animation's mid-frame. */
 	.seal {
 		stroke-dasharray: 1560;
 		stroke-dashoffset: 260;
@@ -203,20 +203,21 @@ const stagger = (i: number) => ({ start: 6 + i * 12, end: 34 + i * 14 });
 	@supports (animation-timeline: view()) {
 		@media (prefers-reduced-motion: no-preference) {
 			.gap-fill {
-				animation: close-gap-halt linear both;
-				animation-timeline: --case-integrity;
+				animation: close-gap-halt 1ms linear both;
+				/* Keep the timeline out of the shorthand during production minification. */
+				animation-timeline: --case-integrity !important;
 				animation-range: var(--s) var(--e);
 			}
 
 			.warn {
-				animation: warn-in linear both;
-				animation-timeline: --case-integrity;
+				animation: warn-in 1ms linear both;
+				animation-timeline: --case-integrity !important;
 				animation-range: var(--s) var(--e);
 			}
 
 			.seal {
-				animation: trace-unsealed linear both;
-				animation-timeline: --case-integrity;
+				animation: trace-unsealed 1ms linear both;
+				animation-timeline: --case-integrity !important;
 				animation-range: entry 10% cover 88%;
 			}
 		}
