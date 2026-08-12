@@ -5,12 +5,12 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://onsano.com',
-  // English default at /. Other locales live under /xx/.
+  // German is the unprefixed default at /. Other locales live under /xx/.
   i18n: {
-    defaultLocale: 'en',
+    defaultLocale: 'de',
     locales: ['en', 'de', 'fr', 'nl', 'it', 'es'],
     routing: {
-      prefixDefaultLocale: false, // EN at /, others at /de/, /fr/, /nl/, /it/, /es/
+      prefixDefaultLocale: false, // DE at /, others at /en/, /fr/, /nl/, /it/, /es/
     },
   },
   vite: {

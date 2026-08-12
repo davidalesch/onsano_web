@@ -14,7 +14,7 @@ const legalPage = pathname.endsWith('/impressum')
   : pathname.endsWith('/datenschutz')
     ? 'datenschutz'
     : null;
-const localeHome = (code: Lang) => code === 'en' ? '/' : `/${code}/`;
+const localeHome = (code: Lang) => code === 'de' ? '/' : `/${code}/`;
 const localeHref = (code: Lang) => legalPage ? `${localeHome(code)}${legalPage}/` : localeHome(code);
 const locales: { code: Lang; label: string; href: string }[] = [
   { code: 'en', label: 'English', href: localeHref('en') },

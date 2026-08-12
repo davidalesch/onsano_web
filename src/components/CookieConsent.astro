@@ -11,7 +11,7 @@ import { type Lang } from '../i18n/ui';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
-const home = lang === 'en' ? '/' : `/${lang}/`;
+const home = lang === 'de' ? '/' : `/${lang}/`;
 const copy = {
   en: { text: 'We use analytics cookies to understand how the site is used. They load only if you accept.', policy: 'Privacy policy', decline: 'Decline', accept: 'Accept' },
   de: { text: 'Wir verwenden Analyse-Cookies, um die Nutzung der Website zu verstehen. Sie werden nur mit Ihrer Zustimmung geladen.', policy: 'Datenschutzerklärung', decline: 'Ablehnen', accept: 'Akzeptieren' },

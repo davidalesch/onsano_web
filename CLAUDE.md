@@ -13,7 +13,7 @@ Full creative brief lives in `DESIGN.md`. This file is the non-negotiable ground
 - **Astro 7** (static output / SSG), **Tailwind v4** via `@tailwindcss/vite` (CSS-first `@theme`).
 - **GSAP 3** (+ ScrollTrigger) for sequenced motion; native CSS scroll-driven animation for simple reveals.
 - **lucide-astro** icons. **Fonts self-hosted** via `@fontsource-variable/*` — **never** Google Fonts CDN (GDPR/IP-transfer under German case law).
-- Deploy: **Cloudflare Pages**. i18n: **EN default at `/`, DE at `/de/`** (`prefixDefaultLocale: false`).
+- Deploy: **Cloudflare Pages**. i18n: **DE default at `/`, EN at `/en/`** (`prefixDefaultLocale: false`).
 
 ## Design tokens — one source of truth
 All colour/type/spacing/motion live in **`src/styles/global.css`** (`@theme` block). Change values there, never hard-code.

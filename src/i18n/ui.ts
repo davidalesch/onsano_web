@@ -7,12 +7,12 @@ export const languages = {
   es: 'Español',
 } as const;
 
-export const defaultLang = 'en';
+export const defaultLang = 'de';
 
 export type Lang = keyof typeof languages;
 
 /**
- * UI strings. EN is the default/reference. Keep keys in sync across locales.
+ * UI strings. DE is the default locale. Keep keys in sync across locales.
  * Legal page bodies (Impressum/Datenschutz) stay German-only and live elsewhere.
  */
 export const ui = {
