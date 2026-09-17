@@ -87,6 +87,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Anchor jumps land below the fixed header. */
+    scroll-padding-top: var(--header-h);
     -webkit-text-size-adjust: 100%;
   }
 
@@ -199,20 +201,3 @@ html.js-reveal [data-reveal].is-visible {
   }
 }
 
-/* --- Lenis smooth scroll (base styles) ------------------------------------- */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-.lenis.lenis-smooth iframe {
-  pointer-events: none;
-}

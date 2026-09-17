@@ -1,6 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import { useTranslations, type Lang } from '../i18n/ui';
+import { estimatorCopy, estimatorHref } from '../i18n/estimator';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -8,14 +9,15 @@ const t = useTranslations(lang);
 const year = new Date().getFullYear();
 const home = lang === 'de' ? '/' : `/${lang}/`;
 const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
-const onLegalPage = pathname.endsWith('/impressum') || pathname.endsWith('/datenschutz');
-const sectionHref = (id: string) => onLegalPage ? `${home}#${id}` : `#${id}`;
+const onHome = pathname === (home.replace(/\/$/, '') || '/');
+const sectionHref = (id: string) => onHome ? `#${id}` : `${home}#${id}`;
 
 const nav = [
   { href: sectionHref('problem'), label: t('nav.problem') },
   { href: sectionHref('approach'), label: t('nav.approach') },
   { href: sectionHref('compliance'), label: t('nav.compliance') },
   { href: sectionHref('contact'), label: t('nav.contact') },
+  { href: estimatorHref(lang), label: estimatorCopy[lang === 'de' ? 'de' : 'en']['nav.label'] },
 ];
 const legal = [
   { href: `${home}impressum/`, label: t('legal.imprint') },
