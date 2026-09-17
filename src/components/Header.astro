@@ -3,6 +3,7 @@ import Logo from './Logo.astro';
 import CalButton from './CalButton.astro';
 import { ChevronDown } from 'lucide-astro';
 import { useTranslations, type Lang } from '../i18n/ui';
+import { estimatorPath } from '../i18n/estimator';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -14,8 +15,14 @@ const legalPage = pathname.endsWith('/impressum')
   : pathname.endsWith('/datenschutz')
     ? 'datenschutz'
     : null;
+// The loss estimator exists in EN and DE only.
+const onEstimator = Object.values(estimatorPath).some((p) => p.replace(/\/$/, '') === pathname);
+const onHome = !legalPage && !onEstimator;
 const localeHome = (code: Lang) => code === 'de' ? '/' : `/${code}/`;
-const localeHref = (code: Lang) => legalPage ? `${localeHome(code)}${legalPage}/` : localeHome(code);
+const localeHref = (code: Lang) => {
+  if (onEstimator) return code === 'de' ? estimatorPath.de : estimatorPath.en;
+  return legalPage ? `${localeHome(code)}${legalPage}/` : localeHome(code);
+};
 const locales: { code: Lang; label: string; href: string }[] = [
   { code: 'en', label: 'English', href: localeHref('en') },
   { code: 'de', label: 'Deutsch', href: localeHref('de') },
@@ -25,13 +32,13 @@ const locales: { code: Lang; label: string; href: string }[] = [
   { code: 'es', label: 'Español', href: localeHref('es') },
 ];
 const home = localeHome(lang);
-const otherLocales = locales.filter((l) => l.code !== lang);
+const otherLocales = locales.filter((l) => l.code !== lang && (!onEstimator || l.code === 'en' || l.code === 'de'));
 
 const nav = [
-  { href: legalPage ? `${home}#problem` : '#problem', label: t('nav.problem') },
-  { href: legalPage ? `${home}#approach` : '#approach', label: t('nav.approach') },
-  { href: legalPage ? `${home}#compliance` : '#compliance', label: t('nav.compliance') },
-  { href: legalPage ? `${home}#contact` : '#contact', label: t('nav.contact') },
+  { href: onHome ? '#problem' : `${home}#problem`, label: t('nav.problem') },
+  { href: onHome ? '#approach' : `${home}#approach`, label: t('nav.approach') },
+  { href: onHome ? '#compliance' : `${home}#compliance`, label: t('nav.compliance') },
+  { href: onHome ? '#contact' : `${home}#contact`, label: t('nav.contact') },
 ];
 ---
 <header class="site-header" data-header>
