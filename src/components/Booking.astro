@@ -1,0 +1,93 @@
+---
+import type { Lang } from "../i18n/ui";
+const { lang } = Astro.props as { lang: Lang };
+const messages = {
+  en: "The booking calendar could not load. Please try again.",
+  de: "Der Buchungskalender konnte nicht geladen werden. Bitte versuchen Sie es erneut.",
+  fr: "Le calendrier n’a pas pu se charger. Veuillez réessayer.",
+  nl: "De boekingskalender kon niet laden. Probeer het opnieuw.",
+  it: "Impossibile caricare il calendario. Riprova.",
+  es: "No se pudo cargar el calendario. Inténtelo de nuevo.",
+};
+---
+
+<p class="booking-error" role="alert" hidden data-booking-error>
+  {messages[lang]}
+</p>
+<script define:vars={{ lang }}>
+  // Load the official SDK only on request, using the default namespace.
+  let sdk;
+  function loadBooking() {
+    if (sdk) return sdk;
+    sdk = new Promise((resolve, reject) => {
+      const queued = function () {
+        queued.q.push(arguments);
+      };
+      queued.q = [];
+      queued.ns = {};
+      window.Cal = queued;
+      window.Cal("init", { calOrigin: "https://cal.com" });
+      window.Cal("ui", { hideEventTypeDetails: false, layout: "month_view" });
+      const script = document.createElement("script");
+      script.src = "https://cal.com/embed/embed.js";
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => {
+        sdk = undefined;
+        script.remove();
+        reject(new Error("Booking SDK unavailable"));
+      };
+      document.head.appendChild(script);
+    });
+    return sdk;
+  }
+  document.addEventListener("click", async (event) => {
+    const trigger =
+      event.target instanceof Element
+        ? event.target.closest("[data-booking]")
+        : null;
+    if (!trigger) return;
+    event.preventDefault();
+    if (trigger.getAttribute("aria-busy") === "true") return;
+    const error = document.querySelector("[data-booking-error]");
+    error.hidden = true;
+    trigger.setAttribute("aria-busy", "true");
+    try {
+      await loadBooking();
+      window.Cal("modal", {
+        calLink: "david-alesch/30min",
+        calOrigin: "https://cal.com",
+        config: {
+          layout: "month_view",
+          theme: "light",
+          locale: lang,
+          useSlotsViewOnSmallScreen: "true",
+        },
+      });
+    } catch {
+      error.hidden = false;
+    } finally {
+      trigger.removeAttribute("aria-busy");
+    }
+  });
+</script>
+<style>
+  .booking-error {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    max-width: calc(100% - 32px);
+    padding: 16px 22px;
+    background: #fffaf1;
+    border: 1px solid #b9c4ba;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px #192f4320;
+    color: #192f43;
+    font-size: 14px;
+  }
+  .booking-error[hidden] {
+    display: none;
+  }
+</style>

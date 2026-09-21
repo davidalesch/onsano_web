@@ -1,17 +1,20 @@
 ---
-import '../styles/global.css';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import CookieConsent from '../components/CookieConsent.astro';
-import { type Lang } from '../i18n/ui';
+import "../styles/global.css";
+import "../styles/revamp.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import CookieConsent from "../components/CookieConsent.astro";
+import Booking from "../components/Booking.astro";
+import { type Lang } from "../i18n/ui";
 
 interface Props {
   title: string;
   description: string;
   lang?: Lang;
 }
-const { title, description, lang = 'de' } = Astro.props;
+const { title, description, lang = "en" } = Astro.props;
 ---
+
 <!doctype html>
 <html lang={lang}>
   <head>
@@ -19,123 +22,61 @@ const { title, description, lang = 'de' } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="/brand/onsano-mark-tile.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#faf9f5" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <!-- Prepare a language change before the browser can paint the destination
-         at the top. The matching script at the end of the body reveals it only
-         after the saved coordinates have been applied. -->
-    <script is:inline>
-      (() => {
-        const key = 'onsano-language-scroll';
-        try {
-          const raw = sessionStorage.getItem(key);
-          if (!raw) return;
-          const state = JSON.parse(raw);
-          const valid = typeof state.top === 'number'
-            && typeof state.savedAt === 'number'
-            && Date.now() - state.savedAt < 10000;
-          if (!valid) {
-            sessionStorage.removeItem(key);
-            return;
-          }
-          history.scrollRestoration = 'manual';
-          document.documentElement.dataset.languageScrollRestore = '';
-          document.documentElement.style.scrollBehavior = 'auto';
-          document.documentElement.style.visibility = 'hidden';
-          window.setTimeout(() => {
-            document.documentElement.style.removeProperty('visibility');
-          }, 1500);
-        } catch {
-          sessionStorage.removeItem(key);
-        }
-      })();
-    </script>
   </head>
   <body>
-    <a href="#main" class="skip-link">Skip to content</a>
+    <a href="#main" class="skip-link">
+      Skip to content
+    </a>
     <Header lang={lang} />
     <main id="main">
       <slot />
     </main>
     <Footer lang={lang} />
     <CookieConsent lang={lang} />
+    <Booking lang={lang} />
 
-    <!-- This runs synchronously after the page has its full height but before
-         deferred modules initialise. -->
-    <script is:inline>
-      (() => {
-        const root = document.documentElement;
-        if (!root.hasAttribute('data-language-scroll-restore')) return;
-
-        const key = 'onsano-language-scroll';
-        try {
-          const state = JSON.parse(sessionStorage.getItem(key) || '{}');
-          sessionStorage.removeItem(key);
-          const maxScroll = Math.max(0, root.scrollHeight - window.innerHeight);
-          const top = Math.max(0, Math.min(maxScroll, state.top));
-          window.scrollTo({ left: 0, top, behavior: 'instant' });
-        } catch {
-          sessionStorage.removeItem(key);
-        }
-
-        root.removeAttribute('data-language-scroll-restore');
-        root.style.removeProperty('visibility');
-        window.requestAnimationFrame(() => {
-          root.style.removeProperty('scroll-behavior');
-        });
-      })();
-    </script>
-
-    <!-- Scroll-reveal. Progressive enhancement: nothing here is required for
-         content to be visible/accessible. Scrolling itself is native: a
-         smooth-scroll library (Lenis) used to animate the wheel, which kept
-         the page gliding after fingers landed back on a trackpad. -->
     <script>
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const supportsIO = 'IntersectionObserver' in window;
-
-      if (!reduce && supportsIO) {
-        // Reveal-on-scroll
-        document.documentElement.classList.add('js-reveal');
-        const io = new IntersectionObserver(
+      if (
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+        "IntersectionObserver" in window
+      ) {
+        const observer = new IntersectionObserver(
           (entries) => {
-            for (const e of entries) {
-              if (e.isIntersecting) {
-                (e.target as HTMLElement).classList.add('is-visible');
-                io.unobserve(e.target);
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.animate(
+                  [
+                    { opacity: 0.35, transform: "translateY(20px)" },
+                    { opacity: 1, transform: "translateY(0)" },
+                  ],
+                  { duration: 650, easing: "cubic-bezier(.22,1,.36,1)" },
+                );
+                observer.unobserve(entry.target);
               }
-            }
-          },
-          { rootMargin: '0px 0px -10% 0px', threshold: 0.12 },
-        );
-        document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
-        // Safety net: never leave content hidden if something stalls.
-        window.setTimeout(() => {
-          document
-            .querySelectorAll('[data-reveal]:not(.is-visible)')
-            .forEach((el) => {
-              const r = el.getBoundingClientRect();
-              if (r.top < window.innerHeight) el.classList.add('is-visible');
             });
-        }, 2500);
+          },
+          { threshold: 0.12 },
+        );
+        document
+          .querySelectorAll("[data-reveal]")
+          .forEach((el) => observer.observe(el));
       }
     </script>
-
-    <!-- Cal.com element-click embed init (buttons carry data-cal-* attributes) -->
-    <script is:inline>
-      (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
-      Cal("init", "30min", { origin: "https://app.cal.com" });
-      Cal.ns["30min"]("ui", { hideEventTypeDetails: false, layout: "month_view" });
-    </script>
-
     <style>
-      /* Header is fixed/out of flow, so page content needs a top offset to
-         clear it. The hero (if present) cancels this with a negative margin
-         so its own background still reaches the true top of the page. */
-      main { padding-top: var(--header-h); }
+      /* Reserve space for the fixed header on every route. */
+      main {
+        padding-top: 80px;
+      }
+      @media (max-width: 760px) {
+        main {
+          padding-top: 70px;
+        }
+      }
 
       .skip-link {
         position: absolute;
@@ -147,7 +88,9 @@ const { title, description, lang = 'de' } = Astro.props;
         border-radius: 0 0 var(--radius-sm) 0;
         z-index: 200;
       }
-      .skip-link:focus { left: 0; }
+      .skip-link:focus {
+        left: 0;
+      }
     </style>
   </body>
 </html>

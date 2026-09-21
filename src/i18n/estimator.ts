@@ -1,6 +1,6 @@
 /**
- * Copy for the loss estimator: /verlustrechner/ (DE) and /en/loss-estimator/
- * (EN). DE is the source for this page, since the reader is German hospital
+ * Copy for the loss estimator: /loss-estimator/ (EN) and /de/verlustrechner/ (DE)
+ * DE is the source for this page, since the reader is German hospital
  * Medizincontrolling; the other locales link to the EN page until translated.
  * Every constant the copy refers to lives in ../lib/loss-model.ts.
  */
@@ -9,8 +9,8 @@ import type { Lang } from './ui';
 export type EstimatorLang = 'en' | 'de';
 
 export const estimatorPath: Record<EstimatorLang, string> = {
-  en: '/en/loss-estimator/',
-  de: '/verlustrechner/',
+  en: '/loss-estimator/',
+  de: '/de/verlustrechner/',
 };
 
 export function estimatorHref(lang: Lang): string {

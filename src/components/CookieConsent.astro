@@ -11,7 +11,7 @@ import { type Lang } from '../i18n/ui';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
-const home = lang === 'de' ? '/' : `/${lang}/`;
+const home = lang === 'en' ? '/' : `/${lang}/`;
 const copy = {
   en: { text: 'We use analytics cookies to understand how the site is used. They load only if you accept.', policy: 'Privacy policy', decline: 'Decline', accept: 'Accept' },
   de: { text: 'Wir verwenden Analyse-Cookies, um die Nutzung der Website zu verstehen. Sie werden nur mit Ihrer Zustimmung geladen.', policy: 'Datenschutzerklärung', decline: 'Ablehnen', accept: 'Akzeptieren' },
@@ -71,6 +71,7 @@ const copy = {
 <script define:vars={{ GA_MEASUREMENT_ID }}>
   const KEY = 'onsano-consent';
   const banner = document.querySelector('[data-consent]');
+  const analyticsConfigured = GA_MEASUREMENT_ID && !GA_MEASUREMENT_ID.includes('XXXX');
 
   function loadGA() {
     if (!GA_MEASUREMENT_ID || GA_MEASUREMENT_ID.includes('XXXX')) return; // no real id yet
@@ -86,7 +87,7 @@ const copy = {
 
   const choice = localStorage.getItem(KEY);
   if (choice === 'accepted') loadGA();
-  else if (choice !== 'declined') banner?.removeAttribute('hidden');
+  else if (choice !== 'declined' && analyticsConfigured) banner?.removeAttribute('hidden');
 
   banner?.querySelector('[data-consent-accept]')?.addEventListener('click', () => {
     localStorage.setItem(KEY, 'accepted');

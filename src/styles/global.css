@@ -6,16 +6,9 @@
 
 /* Self-hosted fonts (GDPR: never load Google Fonts CDN because IP transfer under
    German case law). Variable fonts, full Latin incl. German ß/umlauts. */
-@import '@fontsource-variable/geist';
-@import '@fontsource-variable/inter';
-@import '@fontsource-variable/instrument-sans';
-@import '@fontsource-variable/manrope';
-@import '@fontsource-variable/source-sans-3';
-@import '@fontsource-variable/ibm-plex-sans';
-@import '@fontsource/poppins/400.css';
-@import '@fontsource/poppins/500.css';
-@import '@fontsource/poppins/600.css';
-@import 'tailwindcss';
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/manrope";
+@import "tailwindcss";
 
 @theme {
   /* ---- Colour -------------------------------------------------------------
@@ -23,21 +16,21 @@
      Rule of thumb: brand-blue = text + headings. brand-green = decoration
      ONLY (fails text contrast). green-ink = the green you may put on text. */
   --color-bg: #ffffff;
-  --color-surface: #f5f7f9;          /* faint cool tint for alternating sections */
-  --color-ink: #0b0f14;              /* body text (near-black)            ~19:1  */
-  --color-muted: #4c5c70;            /* muted / secondary text            ~6.8:1 */
+  --color-surface: #f5f7f9; /* faint cool tint for alternating sections */
+  --color-ink: #0b0f14; /* body text (near-black)            ~19:1  */
+  --color-muted: #4c5c70; /* muted / secondary text            ~6.8:1 */
 
-  --color-brand: #355270;            /* PRIMARY blue for titles, links, UI  ~8.1:1 */
-  --color-brand-700: #294152;        /* darker blue for hover/pressed             */
-  --color-brand-100: #e7edf3;        /* blue tint for chips/soft fills            */
+  --color-brand: #355270; /* PRIMARY blue for titles, links, UI  ~8.1:1 */
+  --color-brand-700: #294152; /* darker blue for hover/pressed             */
+  --color-brand-100: #e7edf3; /* blue tint for chips/soft fills            */
 
-  --color-brand-green: #5faf8c;      /* light green for FILLS/LOGO ONLY     2.6:1 ✗ */
-  --color-green-ink: #3f7d63;        /* green for TEXT/icons on white     ~4.9:1 ✓ */
-  --color-green-100: #e5f1eb;        /* green tint for soft fills                 */
+  --color-brand-green: #5faf8c; /* light green for FILLS/LOGO ONLY     2.6:1 ✗ */
+  --color-green-ink: #3f7d63; /* green for TEXT/icons on white     ~4.9:1 ✓ */
+  --color-green-100: #e5f1eb; /* green tint for soft fills                 */
 
-  --color-border: #e4e9ee;           /* hairlines, card edges */
+  --color-border: #e4e9ee; /* hairlines, card edges */
 
-  --color-danger: #b3402f;           /* muted red for decorative "at risk" signal ~5.7:1 */
+  --color-danger: #b3402f; /* muted red for decorative "at risk" signal ~5.7:1 */
 
   /* Mark uses this as the "gap" colour between the two squares.
      Set to the current section background so the notch reads correctly. */
@@ -45,27 +38,27 @@
 
   /* ---- Typography ---------------------------------------------------------
      Display = Geist (geometric grotesque). Body = Inter. */
-  --font-display: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
-  --font-body: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
 
   /* Fluid type scale (mobile min → desktop max) */
-  --text-display: clamp(2.25rem, 1.1rem + 4vw, 4rem);     /* 36 → 64  H1  */
+  --text-display: clamp(2.25rem, 1.1rem + 4vw, 4rem); /* 36 → 64  H1  */
   --text-display--line-height: 1.08;
-  --text-h2: clamp(1.75rem, 1.2rem + 2.4vw, 2.5rem);      /* 28 → 40      */
+  --text-h2: clamp(1.75rem, 1.2rem + 2.4vw, 2.5rem); /* 28 → 40      */
   --text-h2--line-height: 1.15;
-  --text-h3: clamp(1.25rem, 1.05rem + 0.9vw, 1.75rem);    /* 20 → 28      */
+  --text-h3: clamp(1.25rem, 1.05rem + 0.9vw, 1.75rem); /* 20 → 28      */
   --text-h3--line-height: 1.3;
-  --text-lead: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);   /* 18 → 22 lead */
+  --text-lead: clamp(1.125rem, 1rem + 0.5vw, 1.375rem); /* 18 → 22 lead */
   --text-lead--line-height: 1.5;
-  --text-body: 1.0625rem;                                 /* 17           */
+  --text-body: 1.0625rem; /* 17           */
   --text-body--line-height: 1.6;
-  --text-small: 0.875rem;                                 /* 14           */
+  --text-small: 0.875rem; /* 14           */
   --text-small--line-height: 1.5;
 
   /* ---- Spacing ------------------------------------------------------------
      8px grid. Section rhythm is fluid: 64px mobile → 160px desktop. */
-  --spacing-section: clamp(4rem, 2rem + 8vw, 10rem);      /* 64 → 160 */
-  --spacing-gutter: clamp(1.25rem, 0.5rem + 3vw, 2rem);   /* page side padding */
+  --spacing-section: clamp(4rem, 2rem + 8vw, 10rem); /* 64 → 160 */
+  --spacing-gutter: clamp(1.25rem, 0.5rem + 3vw, 2rem); /* page side padding */
   --header-h: 4.5rem; /* fixed header height used to offset content below it */
 
   /* ---- Radii -------------------------------------------------------------- */
@@ -77,8 +70,8 @@
   /* ---- Motion -------------------------------------------------------------
      Ease-out only, no bounce/elastic, matching the factual, no-bs register. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --dur-fast: 200ms;    /* UI micro-interactions */
-  --dur-slow: 520ms;    /* scroll-triggered reveals */
+  --dur-fast: 200ms; /* UI micro-interactions */
+  --dur-slow: 520ms; /* scroll-triggered reveals */
 
   /* container */
   --breakpoint-container: 76rem; /* 1216px max content width */
@@ -87,8 +80,6 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* Anchor jumps land below the fixed header. */
-    scroll-padding-top: var(--header-h);
     -webkit-text-size-adjust: 100%;
   }
 
@@ -102,7 +93,10 @@
     text-rendering: optimizeLegibility;
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     color: var(--color-brand);
     font-weight: 600;
@@ -123,7 +117,9 @@
 
   /* Respect reduced-motion: kill transforms/animation, keep opacity legible. */
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
@@ -201,3 +197,31 @@ html.js-reveal [data-reveal].is-visible {
   }
 }
 
+/* --- Lenis smooth scroll (base styles) ------------------------------------- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* September 2026 redesign palette; legacy tokens above serve legal pages. */
+:root {
+  --ink: #192f43;
+  --muted: #586975;
+  --cream: #faf9f5;
+  --line: #dce1de;
+  --mint: #dfede4;
+  --accent: #b5ddc5;
+  --logo-gap: var(--cream);
+}
