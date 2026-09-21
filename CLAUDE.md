@@ -7,7 +7,7 @@ Marketing/presentation site for Onsano. Audience: **German hospital contacts** (
 revenue through complete documentation and audit-defensible cases. **NOT** "saving clinicians time /
 reducing clinician workload" — that framing is off-pitch; do not lead with it.
 
-Full creative brief lives in `DESIGN.md`. This file is the non-negotiable ground truth — read it before editing.
+The September 2026 user-requested revamp supersedes the older abstract-product brief. Full creative brief lives in `DESIGN.md`. This file is the non-negotiable ground truth — read it before editing.
 
 ## Stack (pinned, verified current)
 - **Astro 7** (static output / SSG), **Tailwind v4** via `@tailwindcss/vite` (CSS-first `@theme`).
@@ -16,7 +16,7 @@ Full creative brief lives in `DESIGN.md`. This file is the non-negotiable ground
 - Deploy: **Cloudflare Pages**. i18n: **EN default at `/`, DE at `/de/`** (`prefixDefaultLocale: false`).
 
 ## Design tokens — one source of truth
-All colour/type/spacing/motion live in **`src/styles/global.css`** (`@theme` block). Change values there, never hard-code.
+Shared palette and legacy tokens live in **`src/styles/global.css`**. Redesign layouts and responsive rules live in **`src/styles/revamp.css`**. Use the current redesign palette for the marketing site; the original tokens remain for the legal pages.
 
 - **Blue `#355270`** (`text-brand`) = titles, links, primary text. Passes AA (~8:1). The workhorse.
 - **Light green `#5faf8c`** (`text-brand-green`) = **decoration / fills / logo ONLY**. Fails text contrast (2.6:1) — **never use for text or borders on white.**
@@ -33,15 +33,15 @@ All colour/type/spacing/motion live in **`src/styles/global.css`** (`@theme` blo
 Optimistic, informed, no-bs/factual. Short, concise, slightly confident sentences. NOT generic, bland, or overconfident. German regulatory terms + English tech terms both fine.
 
 ## NEVER claim (nothing fact-checkable that isn't real yet)
-- No concrete product **wedge**, no case studies, no customer logos, no specific outcome numbers/percentages presented as fact.
-- **Section 3 (Approach) stays deliberately abstract** — do not list the specific capabilities (spoken-vs-KIS comparison, audit-response drafting, pre-submission screening) that would reveal the wedge.
+- No invented case studies, customer logos, or specific outcome numbers/percentages presented as fact.
+- Explain the MD Audit Agent and Widerspruch Agent using source-grounded product details. The user explicitly requested these product stories and simple synthetic demos in September 2026.
 - No certifications/approvals that don't exist (MDR class, ISO, BSI). Compliance section: "GDPR-minded architecture", "human-in-the-loop by design" — postures, not credentials.
 - No stock medical photography, ever (stethoscopes, corridors, doctor-with-tablet). Abstract geometric system only.
 - Company is **not incorporated yet** → Impressum/Datenschutzerklärung are placeholder scaffolds until real entity details exist.
 
 ## Integrations
-- CTA everywhere = Cal.com element-click embed, link `david-alesch/30min`, namespace `30min`.
+- Booking CTAs link to `https://cal.com/david-alesch/30min`. The September redesign uses direct navigation after the existing iframe stalled in browser verification.
 - Analytics = Google Analytics, **consent-gated** (must not load before the user accepts the cookie banner); disclose in Datenschutzerklärung.
 
 ## Sections (order)
-1 Hero · 2 Problem · 3 Approach (abstract) · 4 Compliance · 5 Contact · 6 Impressum · 7 Datenschutzerklärung.
+1 Hero · 2 Problem · 3 Products and demos · 4 Workflow · 5 Trust · 6 FAQ · 7 Contact · 8 Footer/legal links.

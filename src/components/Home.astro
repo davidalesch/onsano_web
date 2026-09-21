@@ -1,0 +1,297 @@
+---
+import {
+  ArrowDown,
+  ArrowUpRight,
+  ArrowRight,
+  FileText,
+  Check,
+  ShieldCheck,
+  Fingerprint,
+  UserCheck,
+  ScanLine,
+  Layers,
+  Search,
+  Clock3,
+  Plus,
+} from "lucide-astro";
+import { productCopy } from "../i18n/product";
+import type { Lang } from "../i18n/ui";
+import ProductDemo from "./ProductDemo.astro";
+import LogoMark from "./LogoMark.astro";
+const { lang = "en" } = Astro.props as { lang: Lang };
+const c = productCopy(lang);
+const booking = "https://cal.com/david-alesch/30min";
+const icons = [Layers, Search, Clock3];
+const trustIcons = [UserCheck, ScanLine, Fingerprint, ShieldCheck];
+---
+
+<div class="new-home" lang={lang}>
+  <section class="rev-hero">
+    <div class="hero-topline">
+      <span class="eyebrow">
+        <span class="tiny-dot"></span>
+        {c.eyebrow}
+      </span>
+      <span class="edition">ONSANO / 01</span>
+    </div>
+    <div class="hero-heading">
+      <h1>
+        {c.title}
+        <br />
+        <span>{c.title2}</span>
+      </h1>
+      <div class="hero-side">
+        <p>{c.lead}</p>
+        <a
+          class="pill primary"
+          href={booking}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {c.book}
+          <span>
+            <ArrowUpRight size={18} />
+          </span>
+        </a>
+      </div>
+    </div>
+    <div class="case-landscape" aria-label={c.trail.join(" → ")}>
+      <svg
+        class="trail-lines"
+        viewBox="0 0 1200 400"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path d="M-20 310 C190 310 150 130 390 170 S690 360 830 190 S1080 180 1230 60" />
+        <path
+          class="trail-travel"
+          d="M-20 310 C190 310 150 130 390 170 S690 360 830 190 S1080 180 1230 60"
+        />
+      </svg>
+      <div class="landscape-grid" aria-hidden="true"></div>
+      <div class="trail-card record-card">
+        <span class="card-kicker">01 / {c.trail[0]}</span>
+        <div class="paper-stack">
+          <div class="paper-back"></div>
+          <div class="paper-front">
+            <FileText size={23} />
+            <strong>{c.record}</strong>
+            <i></i>
+            <i></i>
+            <i></i>
+            <div class="highlight-line"></div>
+            <i></i>
+          </div>
+        </div>
+        <span class="floating-tag">
+          <span class="tiny-dot"></span>
+          {c.record2}
+        </span>
+      </div>
+      <div class="trail-card intelligence-card">
+        <span class="card-kicker">02 / {c.trail[1]}</span>
+        <div class="intelligence-mark">
+          <LogoMark />
+        </div>
+        <strong>{c.evidence}</strong>
+        <p>{c.evidenceBody}</p>
+        <span class="evidence-chip">
+          <Check size={13} />
+          {c.sourcesConnected}
+        </span>
+      </div>
+      <div class="trail-card decision-card">
+        <span class="card-kicker">03 / {c.trail[2]}</span>
+        <div class="review-heading">
+          <span class="check-circle">
+            <Check size={20} />
+          </span>
+          <strong>{c.review}</strong>
+        </div>
+        <div class="review-line"></div>
+        <div class="review-line short"></div>
+        <div class="review-evidence">
+          <FileText size={16} />
+          <span>{c.record2}</span>
+          <ArrowUpRight size={14} />
+        </div>
+        <p>{c.reviewBody}</p>
+      </div>
+      <span class="landscape-label">{c.landscapeLabel}</span>
+      <a class="landscape-explore" href="#products">
+        {c.demo}
+        <ArrowDown size={17} />
+      </a>
+    </div>
+    <div class="hero-foot">
+      <span>{c.heroNote}</span>
+      <a href="#products">
+        {c.demo}
+        <ArrowDown size={15} />
+      </a>
+    </div>
+  </section>
+  <section id="problem" class="problem-section section-wrap">
+    <div class="section-intro" data-reveal>
+      <p class="eyebrow">{c.problemKicker}</p>
+      <h2>{c.problemTitle}</h2>
+      <p class="section-description">{c.problemBody}</p>
+    </div>
+    <div class="pain-grid">
+      {c.pain.map(([title, body], i) => {
+        const Icon = icons[i];
+        return (
+          <article data-reveal style={`--reveal-delay:${i * 90}ms`}>
+            <Icon size={25} stroke-width={1.4} />
+            <h3>{title}</h3>
+            <p>{body}</p>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+  <section id="products" class="products-section section-wrap">
+    <div class="products-intro" data-reveal>
+      <div>
+        <p class="eyebrow">{c.productKicker}</p>
+        <h2>{c.productTitle}</h2>
+      </div>
+      <p class="section-description">{c.productBody}</p>
+    </div>
+    <article id="md-agent" class="product-row">
+      <div class="product-copy" data-reveal>
+        <p class="eyebrow">{c.mdLabel}</p>
+        <span class="product-name">{c.md}</span>
+        <h3>{c.mdTitle}</h3>
+        <p>{c.mdBody}</p>
+        <ul>
+          {c.mdBullets.map((b) => (
+            <li>
+              <Check size={17} />
+              {b}
+            </li>
+          ))}
+        </ul>
+        <a href="#md-demo" class="text-link">
+          {c.try}
+          <ArrowRight size={17} />
+        </a>
+      </div>
+      <div id="md-demo" class="demo-surround mint" data-reveal>
+        <span class="surround-orbit" aria-hidden="true"></span>
+        <ProductDemo lang={lang} kind="md" />
+      </div>
+    </article>
+    <article id="widerspruch-agent" class="product-row reverse">
+      <div class="product-copy" data-reveal>
+        <p class="eyebrow">{c.obLabel}</p>
+        <span class="product-name">{c.objection}</span>
+        <h3>{c.obTitle}</h3>
+        <p>{c.obBody}</p>
+        <ul>
+          {c.obBullets.map((b) => (
+            <li>
+              <Check size={17} />
+              {b}
+            </li>
+          ))}
+        </ul>
+        <a href="#ob-demo" class="text-link">
+          {c.try}
+          <ArrowRight size={17} />
+        </a>
+      </div>
+      <div id="ob-demo" class="demo-surround lilac" data-reveal>
+        <span class="surround-orbit" aria-hidden="true"></span>
+        <ProductDemo lang={lang} kind="ob" />
+      </div>
+    </article>
+  </section>
+  <section id="approach" class="workflow-section">
+    <div class="section-wrap">
+      <p class="eyebrow" data-reveal>
+        {c.workflowKicker}
+      </p>
+      <h2 data-reveal>{c.workflowTitle}</h2>
+      <div class="workflow-grid">
+        {c.steps.map(([title, body], i) => (
+          <article data-reveal>
+            <span class="step-number">0{i + 1}</span>
+            <h3>{title}</h3>
+            <p>{body}</p>
+            {i < 2 && <ArrowRight class="step-arrow" size={23} />}
+          </article>
+        ))}
+      </div>
+      <div class="workflow-end">
+        <span>ISiK / FHIR</span>
+        <span class="workflow-end-line"></span>
+        <span>Onsano</span>
+        <span class="workflow-end-line"></span>
+        <span>{c.trail[2]}</span>
+      </div>
+    </div>
+  </section>
+  <section id="compliance" class="trust-section section-wrap">
+    <div class="trust-intro" data-reveal>
+      <div class="trust-symbol">
+        <ShieldCheck size={48} stroke-width={1} />
+      </div>
+      <p class="eyebrow">{c.trustKicker}</p>
+      <h2>{c.trustTitle}</h2>
+      <p>{c.trustBody}</p>
+    </div>
+    <div class="trust-grid">
+      {c.trustItems.map(([title, body], i) => {
+        const Icon = trustIcons[i];
+        return (
+          <article data-reveal>
+            <Icon size={23} stroke-width={1.5} />
+            <h3>{title}</h3>
+            <p>{body}</p>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+  <section class="faq-section section-wrap">
+    <h2 data-reveal>{c.faqTitle}</h2>
+    <div>
+      {c.faqs.map(([q, a], i) => (
+        <details class="faq-item">
+          <summary>
+            <span class="faq-number">0{i + 1}</span>
+            {q}
+            <Plus size={20} />
+          </summary>
+          <p>{a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+  <section id="contact" class="contact-section">
+    <div class="contact-orbit" aria-hidden="true"></div>
+    <div class="contact-inner" data-reveal>
+      <p class="eyebrow">{c.contactKicker}</p>
+      <h2>{c.contactTitle}</h2>
+      <p>{c.contactBody}</p>
+      <a
+        class="pill primary"
+        href={booking}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {c.book}
+        <span>
+          <ArrowUpRight size={19} />
+        </span>
+      </a>
+      <div class="contact-email">
+        {c.contactEmail}{" "}
+        <a href="mailto:info@onsano.com">
+          info@onsano.com <ArrowUpRight size={14} />
+        </a>
+      </div>
+    </div>
+  </section>
+</div>

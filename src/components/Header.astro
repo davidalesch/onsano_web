@@ -1,292 +1,276 @@
 ---
-import Logo from './Logo.astro';
-import CalButton from './CalButton.astro';
-import { ChevronDown } from 'lucide-astro';
-import { useTranslations, type Lang } from '../i18n/ui';
-
-interface Props { lang: Lang }
-const { lang } = Astro.props;
-const t = useTranslations(lang);
-
-const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
-const legalPage = pathname.endsWith('/impressum')
-  ? 'impressum'
-  : pathname.endsWith('/datenschutz')
-    ? 'datenschutz'
-    : null;
-const localeHome = (code: Lang) => code === 'en' ? '/' : `/${code}/`;
-const localeHref = (code: Lang) => legalPage ? `${localeHome(code)}${legalPage}/` : localeHome(code);
-const locales: { code: Lang; label: string; href: string }[] = [
-  { code: 'en', label: 'English', href: localeHref('en') },
-  { code: 'de', label: 'Deutsch', href: localeHref('de') },
-  { code: 'fr', label: 'Français', href: localeHref('fr') },
-  { code: 'nl', label: 'Nederlands', href: localeHref('nl') },
-  { code: 'it', label: 'Italiano', href: localeHref('it') },
-  { code: 'es', label: 'Español', href: localeHref('es') },
-];
-const home = localeHome(lang);
-const otherLocales = locales.filter((l) => l.code !== lang);
-
-const nav = [
-  { href: legalPage ? `${home}#problem` : '#problem', label: t('nav.problem') },
-  { href: legalPage ? `${home}#approach` : '#approach', label: t('nav.approach') },
-  { href: legalPage ? `${home}#compliance` : '#compliance', label: t('nav.compliance') },
-  { href: legalPage ? `${home}#contact` : '#contact', label: t('nav.contact') },
+import Logo from "./Logo.astro";
+import { ArrowUpRight, ChevronDown, Menu } from "lucide-astro";
+import { languages, type Lang } from "../i18n/ui";
+import { productCopy } from "../i18n/product";
+const { lang } = Astro.props as { lang: Lang };
+const c = productCopy(lang);
+const home = lang === "en" ? "/" : `/${lang}/`;
+const pathname = Astro.url.pathname.replace(/\/+$/, "");
+const legal = pathname.endsWith("/impressum")
+  ? "impressum/"
+  : pathname.endsWith("/datenschutz")
+    ? "datenschutz/"
+    : "";
+const links = [
+  { id: "products", label: c.products },
+  { id: "approach", label: c.workflow },
+  { id: "compliance", label: c.trust },
 ];
 ---
-<header class="site-header" data-header>
-  <div class="container-page site-header__inner">
-    <a href={home} class="site-header__logo" aria-label="Onsano, home">
+
+<header class="rev-header">
+  <div class="rev-header-inner">
+    <a href={home} class="brand-link" aria-label="Onsano home">
       <Logo class="logo" />
     </a>
-
-    <nav class="site-header__nav" aria-label="Primary">
-      {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+    <nav aria-label="Primary" class="desktop-nav">
+      {links.map((l) => (
+        <a href={`${home}#${l.id}`}>{l.label}</a>
+      ))}
     </nav>
-
-    <div class="site-header__actions">
-      <details class="lang-switch" data-lang-switch>
+    <div class="header-actions">
+      <details class="language-menu">
         <summary aria-label="Change language">
-          <span>{lang.toUpperCase()}</span>
-          <ChevronDown class="lang-switch__chevron" width={14} height={14} stroke-width={2} aria-hidden="true" />
+          {lang.toUpperCase()}
+          <ChevronDown size={12} />
         </summary>
-        <ul class="lang-switch__menu">
-          {otherLocales.map((l) => (
-            <li><a href={l.href} lang={l.code} data-language-link>{l.label}</a></li>
-          ))}
-        </ul>
+        <div>
+          {Object.entries(languages)
+            .filter(([code]) => code !== lang)
+            .map(([code, name]) => (
+              <a
+                lang={code}
+                href={`${code === "en" ? "/" : `/${code}/`}${legal}`}
+              >
+                {name}
+              </a>
+            ))}
+        </div>
       </details>
-      <div class="site-header__cta"><CalButton label={t('cta.call')} /></div>
+      <a
+        href="https://cal.com/david-alesch/30min"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="header-book"
+      >
+        {c.book}
+        <ArrowUpRight size={15} />
+      </a>
+      <details class="mobile-menu">
+        <summary aria-label={c.menuLabel}>
+          <Menu size={21} />
+        </summary>
+        <nav aria-label="Mobile">
+          {links.map((l) => (
+            <a href={`${home}#${l.id}`}>{l.label}</a>
+          ))}
+          <a href={`${home}#contact`}>
+            {c.book}
+            <ArrowUpRight size={15} />
+          </a>
+        </nav>
+      </details>
     </div>
   </div>
 </header>
-
 <style>
-  .site-header {
-    /* Fixed and out of flow, so it overlays the page background (e.g. the hero's
-       gradient wash) all the way to the top instead of reserving its own space. */
+  .rev-header {
     position: fixed;
+    z-index: 50;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 50;
-    transition: background var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out),
-      backdrop-filter var(--dur-fast) var(--ease-out);
-    border-bottom: 1px solid transparent;
+    background: #faf9f5ed;
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid #dce1de85;
   }
-  /* Once the page moves, keep one transparent blurred ribbon over both the
-     blue and white surfaces. Only the foreground colours adapt. */
-  .site-header[data-scrolled],
-  .site-header[data-on-dark][data-dark-scrolled] {
-    background: transparent;
-    -webkit-backdrop-filter: saturate(150%) blur(14px);
-    backdrop-filter: saturate(150%) blur(14px);
-    border-bottom-color: transparent;
-    box-shadow: none;
-  }
-  .site-header__inner {
+  .rev-header-inner {
+    max-width: 1440px;
+    padding: 0 48px;
+    height: 80px;
+    margin: auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.5rem;
-    max-width: 88rem;
-    height: var(--header-h);
+    gap: 30px;
   }
-  .site-header__logo {
-    display: inline-flex;
-    color: var(--color-brand);
-    transition: color var(--dur-fast) var(--ease-out);
+  .brand-link {
+    color: #1d3546;
+    --logo-gap: #faf9f5;
+    display: block;
   }
-
-  /* The landing-page header lives over the blue opening until that exact
-     viewport has passed. :has() supplies the correct first paint; JS keeps the
-     state accurate while scrolling. */
-  :global(body:has([data-hero-dark])) .site-header:not([data-scrolled]),
-  .site-header[data-on-dark] {
-    --logo-gap: var(--color-brand);
+  .brand-link :global(.logo) {
+    height: 29px;
   }
-  :global(body:has([data-hero-dark])) .site-header:not([data-scrolled]) .site-header__logo,
-  .site-header[data-on-dark] .site-header__logo { color: #fff; }
-  :global(body:has([data-hero-dark])) .site-header:not([data-scrolled]) .site-header__nav a,
-  .site-header[data-on-dark] .site-header__nav a,
-  :global(body:has([data-hero-dark])) .site-header:not([data-scrolled]) .lang-switch summary,
-  .site-header[data-on-dark] .lang-switch summary { color: rgb(255 255 255 / 0.76); }
-  :global(body:has([data-hero-dark])) .site-header:not([data-scrolled]) .site-header__nav a:hover,
-  .site-header[data-on-dark] .site-header__nav a:hover,
-  :global(body:has([data-hero-dark])) .site-header:not([data-scrolled]) .lang-switch summary:hover,
-  .site-header[data-on-dark] .lang-switch summary:hover { color: #fff; }
-  :global(body:has([data-hero-dark])) .site-header:not([data-scrolled]) .lang-switch summary:hover,
-  :global(body:has([data-hero-dark])) .site-header:not([data-scrolled]) .lang-switch[open] summary,
-  .site-header[data-on-dark] .lang-switch summary:hover,
-  .site-header[data-on-dark] .lang-switch[open] summary {
-    background: rgb(255 255 255 / 0.1);
+  .desktop-nav {
+    display: flex;
+    gap: 29px;
+    font-size: 12px;
   }
-  :global(body:has([data-hero-dark])) .site-header:not([data-scrolled]) .site-header__cta,
-  .site-header[data-on-dark] .site-header__cta {
-    --btn-bg: #fff;
-    --btn-fg: var(--color-brand);
-    --btn-hover-bg: transparent;
-    --btn-hover-fg: #fff;
-    --btn-hover-border: var(--color-brand-green);
-  }
-
-  .site-header__nav {
-    display: none;
-    gap: 2rem;
-    font-size: 0.95rem;
-  }
-  /* One clean, uniform hover cue used everywhere in the header: a hairline
-     underline grows in from the center, brand-green, under the text colour
-     shifting to brand-blue. Same language as the CTA's hover treatment. */
-  .site-header__nav a {
-    position: relative;
-    display: inline-block;
-    color: var(--color-muted);
+  .desktop-nav a,
+  .header-actions a {
+    color: #263f4d;
     text-decoration: none;
-    padding-bottom: 0.35rem;
-    transition: color var(--dur-fast) var(--ease-out);
   }
-  .site-header__nav a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 2px;
-    border-radius: 1px;
-    background: var(--color-brand-green);
-    transform: scaleX(0);
-    transform-origin: center;
-    transition: transform var(--dur-fast) var(--ease-out);
+  .desktop-nav a:hover {
+    text-decoration: underline;
+    text-underline-offset: 5px;
   }
-  .site-header__nav a:hover,
-  .site-header__nav a:focus-visible { color: var(--color-brand); }
-  .site-header__nav a:hover::after,
-  .site-header__nav a:focus-visible::after {
-    transform: scaleX(1);
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 22px;
   }
-  @media (prefers-reduced-motion: reduce) {
-    .site-header__nav a::after { transition: none; }
-  }
-
-  .site-header__actions { display: flex; align-items: center; gap: 1rem; }
-
-  /* Language switcher: a native <details> disclosure, styled as a small pill
-     trigger + dropdown menu. No JS required for the core interaction. */
-  .lang-switch {
+  .language-menu {
     position: relative;
   }
-  .lang-switch summary {
-    display: inline-flex;
+  .language-menu summary {
+    display: flex;
     align-items: center;
-    gap: 0.3rem;
-    color: var(--color-muted);
-    font-size: 0.875rem;
-    font-weight: 500;
-    padding: 0.375rem 0.5rem;
-    border-radius: var(--radius-sm);
+    gap: 5px;
+    font-size: 10px;
     cursor: pointer;
     list-style: none;
-    transition: color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
   }
-  .lang-switch summary::-webkit-details-marker { display: none; }
-  .lang-switch summary:hover,
-  .lang-switch[open] summary {
-    color: var(--color-brand);
-    background: var(--color-brand-100);
+  .language-menu summary::-webkit-details-marker,
+  .mobile-menu summary::-webkit-details-marker {
+    display: none;
   }
-  .lang-switch__chevron {
-    transition: transform var(--dur-fast) var(--ease-out);
-  }
-  .lang-switch[open] .lang-switch__chevron { transform: rotate(180deg); }
-
-  .lang-switch__menu {
+  .language-menu > div {
     position: absolute;
-    top: calc(100% + 0.5rem);
     right: 0;
-    z-index: 10;
-    min-width: 9rem;
-    margin: 0;
-    padding: 0.4rem;
-    list-style: none;
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    box-shadow: 0 12px 32px -12px rgb(11 15 20 / 0.28);
+    top: 30px;
+    background: #fffefb;
+    border: 1px solid #dce1de;
+    padding: 10px;
+    border-radius: 8px;
+    min-width: 130px;
+    box-shadow: 0 10px 20px #18324315;
   }
-  .lang-switch__menu a {
-    position: relative;
+  .language-menu a {
     display: block;
-    padding: 0.45rem 0.6rem;
-    border-radius: var(--radius-sm);
-    color: var(--color-muted);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out);
+    padding: 7px;
+    font-size: 12px;
   }
-  .lang-switch__menu a:hover,
-  .lang-switch__menu a:focus-visible {
-    color: var(--color-brand);
-    background: var(--color-brand-100);
+  .language-menu a:hover {
+    background: #e7eee2;
+    border-radius: 4px;
   }
-
-  .site-header__cta { display: none; }
-
-  @media (min-width: 900px) {
-    .site-header__cta { display: block; }
+  .header-book {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 11px;
+    padding: 10px 16px;
+    border: 1px solid #b7c4bc;
+    border-radius: 30px;
   }
-  @media (min-width: 980px) {
-    .site-header__inner { position: relative; }
-    .site-header__nav {
-      position: absolute;
-      left: 50%;
-      display: flex;
-      transform: translateX(-50%);
+  .header-book:hover {
+    background: #e2eadc;
+  }
+  .mobile-menu {
+    display: none;
+  }
+  .mobile-menu summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  .mobile-menu nav {
+    position: absolute;
+    top: 70px;
+    left: 15px;
+    right: 15px;
+    background: #fffefb;
+    padding: 15px;
+    border: 1px solid #dce1de;
+    border-radius: 12px;
+    box-shadow: 0 16px 30px #19334315;
+  }
+  .mobile-menu a {
+    display: flex;
+    padding: 14px;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+  @media (max-width: 1050px) {
+    .rev-header-inner {
+      padding-inline: 32px;
+      gap: 20px;
+    }
+    .desktop-nav {
+      gap: 20px;
+      font-size: 11px;
+    }
+    .header-actions {
+      gap: 15px;
+    }
+  }
+  @media (max-width: 760px) {
+    .rev-header-inner {
+      height: 70px;
+      padding-inline: 26px;
+    }
+    .desktop-nav {
+      display: none;
+    }
+    .mobile-menu {
+      display: block;
+    }
+    .header-book {
+      font-size: 10px;
+      padding: 8px 12px;
+      gap: 10px;
+    }
+    .brand-link :global(.logo) {
+      height: 25px;
+    }
+  }
+  @media (max-width: 480px) {
+    .rev-header-inner {
+      padding-inline: 20px;
+      gap: 12px;
+    }
+    .header-book {
+      display: none;
+    }
+    .header-actions {
+      gap: 20px;
     }
   }
 </style>
-
 <script>
-  // Stay transparent and light over the blue opening, then become the normal
-  // white ribbon at the exact blue-to-white boundary.
-  const header = document.querySelector('[data-header]');
-  const darkHero = document.querySelector('[data-hero-dark]');
-  const onScroll = () => {
-    if (!(header instanceof HTMLElement)) return;
-    const headerHeight = header.getBoundingClientRect().height;
-    const isOverDark = darkHero instanceof HTMLElement && darkHero.getBoundingClientRect().bottom > headerHeight;
-
-    header.toggleAttribute('data-on-dark', isOverDark);
-    header.toggleAttribute('data-dark-scrolled', isOverDark && window.scrollY > 6);
-    header.toggleAttribute('data-scrolled', !isOverDark && window.scrollY > 4);
-  };
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll, { passive: true });
-
-  // Close the language menu on outside click or Escape. <details> handles
-  // the open/close toggle natively, this just tidies up dismissal.
-  const langSwitch = document.querySelector('[data-lang-switch]');
-  const LANGUAGE_SCROLL_KEY = 'onsano-language-scroll';
-
-  document.querySelectorAll<HTMLAnchorElement>('[data-language-link]').forEach((link) => {
-    link.addEventListener('click', () => {
-      sessionStorage.setItem(LANGUAGE_SCROLL_KEY, JSON.stringify({
-        top: window.scrollY,
-        savedAt: Date.now(),
-      }));
-      history.scrollRestoration = 'manual';
-    });
+  const menus = document.querySelectorAll<HTMLDetailsElement>(
+    ".rev-header details",
+  );
+  menus.forEach((menu) =>
+    menu.addEventListener("toggle", () => {
+      if (menu.open)
+        menus.forEach((other) => {
+          if (other !== menu) other.open = false;
+        });
+    }),
+  );
+  document.addEventListener("click", (e) =>
+    menus.forEach((menu) => {
+      if (!menu.contains(e.target as Node)) menu.open = false;
+    }),
+  );
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape")
+      menus.forEach((menu) => {
+        if (menu.open) {
+          menu.open = false;
+          menu.querySelector("summary")?.focus();
+        }
+      });
   });
-  document.addEventListener('click', (e) => {
-    if (langSwitch instanceof HTMLDetailsElement && langSwitch.open && !langSwitch.contains(e.target as Node)) {
-      langSwitch.open = false;
-    }
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && langSwitch instanceof HTMLDetailsElement) {
-      langSwitch.open = false;
-    }
-  });
+  document
+    .querySelectorAll(".mobile-menu a")
+    .forEach((link) =>
+      link.addEventListener("click", () =>
+        menus.forEach((menu) => (menu.open = false)),
+      ),
+    );
 </script>

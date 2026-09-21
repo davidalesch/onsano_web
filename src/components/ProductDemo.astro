@@ -1,0 +1,182 @@
+---
+import LogoMark from "./LogoMark.astro";
+import {
+  FileText,
+  ArrowRight,
+  Check,
+  RotateCcw,
+  Search,
+  ArrowUpRight,
+} from "lucide-astro";
+import { productCopy } from "../i18n/product";
+import type { Lang } from "../i18n/ui";
+const { lang = "en", kind = "md" } = Astro.props as {
+  lang: Lang;
+  kind: "md" | "ob";
+};
+const c = productCopy(lang);
+const ob = kind === "ob";
+---
+
+<div class:list={["product-demo", { "is-objection": ob }]} data-demo>
+  <div class="demo-top">
+    <span class="demo-brand">
+      <LogoMark />
+      <span>onsano</span>
+    </span>
+    <span class="demo-case">{c.case}</span>
+    <span class="status-dot" aria-hidden="true"></span>
+  </div>
+  <div class="demo-progress" aria-label={c.progress}>
+    <span class="active">
+      01 <span>{ob ? c.finding : c.query}</span>
+    </span>
+    <i></i>
+    <span>
+      02 <span>{c.evidenceStep}</span>
+    </span>
+    <i></i>
+    <span>
+      03 <span>{c.draftStep}</span>
+    </span>
+  </div>
+  <div class="demo-stage" aria-live="polite">
+    <div data-step="0">
+      <div class="file-icon">
+        <FileText size={24} />
+      </div>
+      <p class="demo-eyebrow">{ob ? c.finding : c.query}</p>
+      <h4>{ob ? c.findingText : c.queryText}</h4>
+      <div class="document-row">
+        <FileText size={17} />
+        <span>{c.record}</span>
+        <span>PDF</span>
+      </div>
+      <div class="document-row">
+        <FileText size={17} />
+        <span>{c.record2}</span>
+        <span>PDF</span>
+      </div>
+      <button class="demo-action" data-next>
+        <Search size={16} />
+        {ob ? c.evaluate : c.run}
+        <ArrowRight size={17} />
+      </button>
+    </div>
+    <div data-step="1" hidden>
+      <div class="evidence-result">
+        <span class="mini-label">
+          <Check size={15} />
+          {ob ? c.argument : c.results}
+        </span>
+        <p>{ob ? c.argumentText : c.resultText}</p>
+        <button class="source-link" data-source aria-expanded="false">
+          {c.source} [1] <ArrowUpRight size={14} />
+        </button>
+      </div>
+      <div class="evidence-gap">
+        <span class="mini-label">{ob ? c.rule : c.gap}</span>
+        <p>{ob ? c.ruleText : c.gapText}</p>
+      </div>
+      <button class="demo-action" data-next>
+        {ob ? c.objectionDraft : c.draft}
+        <ArrowRight size={17} />
+      </button>
+    </div>
+    <div data-step="2" hidden>
+      <span class="mini-label draft-label">
+        <Check size={15} />
+        {c.ready}
+      </span>
+      <div class="draft-paper">
+        <FileText size={23} />
+        <p>{ob ? c.objectionText : c.readyText}</p>
+        <button class="source-link" data-source aria-expanded="false">
+          {c.source} [1] <ArrowUpRight size={14} />
+        </button>
+      </div>
+      <button class="demo-action secondary" data-reset>
+        <RotateCcw size={16} />
+        {c.again}
+      </button>
+    </div>
+    <aside class="source-panel" hidden>
+      <span class="mini-label">[1] {c.sourceTitle}</span>
+      <blockquote>{c.sourceText}</blockquote>
+      <button class="source-link" data-close-source>
+        {c.closeSource} ×
+      </button>
+    </aside>
+  </div>
+  <div class="demo-caption">
+    <span class="tiny-dot"></span>
+    {c.illustrative}
+  </div>
+</div>
+<script>
+  document.querySelectorAll<HTMLElement>("[data-demo]").forEach((demo) => {
+    let step = 0;
+    const source = demo.querySelector<HTMLElement>(".source-panel")!;
+    const closeSource = () => {
+      source.hidden = true;
+      demo
+        .querySelectorAll<HTMLElement>("[data-step]")
+        .forEach((el) => (el.inert = false));
+      demo
+        .querySelectorAll("[data-source]")
+        .forEach((b) => b.setAttribute("aria-expanded", "false"));
+    };
+    const render = () => {
+      closeSource();
+      demo
+        .querySelectorAll<HTMLElement>("[data-step]")
+        .forEach((el) => (el.hidden = Number(el.dataset.step) !== step));
+      demo
+        .querySelectorAll(".demo-progress > span")
+        .forEach((el, i) => el.classList.toggle("active", i <= step));
+      const focus = demo.querySelector<HTMLButtonElement>(
+        `[data-step="${step}"] button`,
+      );
+      focus?.focus({ preventScroll: true });
+    };
+    demo.querySelectorAll("[data-next]").forEach((button) =>
+      button.addEventListener("click", () => {
+        step = Math.min(step + 1, 2);
+        render();
+      }),
+    );
+    demo.querySelector("[data-reset]")?.addEventListener("click", () => {
+      step = 0;
+      render();
+    });
+    demo.querySelectorAll("[data-source]").forEach((button) =>
+      button.addEventListener("click", () => {
+        source.hidden = !source.hidden;
+        demo
+          .querySelectorAll<HTMLElement>("[data-step]")
+          .forEach((el) => (el.inert = !source.hidden));
+        button.setAttribute("aria-expanded", String(!source.hidden));
+        if (!source.hidden)
+          source
+            .querySelector<HTMLButtonElement>("button")
+            ?.focus({ preventScroll: true });
+      }),
+    );
+    demo.querySelector("[data-close-source]")?.addEventListener("click", () => {
+      closeSource();
+      demo
+        .querySelector<HTMLButtonElement>(`[data-step="${step}"] [data-source]`)
+        ?.focus({ preventScroll: true });
+    });
+    demo.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !source.hidden) {
+        closeSource();
+        demo
+          .querySelector<HTMLButtonElement>(
+            `[data-step="${step}"] [data-source]`,
+          )
+          ?.focus({ preventScroll: true });
+      }
+    });
+  });
+</script>

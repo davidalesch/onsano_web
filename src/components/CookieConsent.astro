@@ -71,6 +71,7 @@ const copy = {
 <script define:vars={{ GA_MEASUREMENT_ID }}>
   const KEY = 'onsano-consent';
   const banner = document.querySelector('[data-consent]');
+  const analyticsConfigured = GA_MEASUREMENT_ID && !GA_MEASUREMENT_ID.includes('XXXX');
 
   function loadGA() {
     if (!GA_MEASUREMENT_ID || GA_MEASUREMENT_ID.includes('XXXX')) return; // no real id yet
@@ -86,7 +87,7 @@ const copy = {
 
   const choice = localStorage.getItem(KEY);
   if (choice === 'accepted') loadGA();
-  else if (choice !== 'declined') banner?.removeAttribute('hidden');
+  else if (choice !== 'declined' && analyticsConfigured) banner?.removeAttribute('hidden');
 
   banner?.querySelector('[data-consent-accept]')?.addEventListener('click', () => {
     localStorage.setItem(KEY, 'accepted');
