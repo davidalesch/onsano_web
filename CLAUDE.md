@@ -36,7 +36,7 @@ Optimistic, informed, no-bs/factual. Short, concise, slightly confident sentence
 - Explain the MD Audit Agent and Widerspruch Agent using source-grounded product details. The user explicitly requested these product stories and simple synthetic demos in September 2026.
 - No certifications/approvals that don't exist (MDR class, ISO, BSI). Compliance section: "GDPR-minded architecture", "human-in-the-loop by design" — postures, not credentials.
 - No stock medical photography, ever (stethoscopes, corridors, doctor-with-tablet). Abstract geometric system only.
-- Company is **not incorporated yet** → Impressum/Datenschutzerklärung are placeholder scaffolds until real entity details exist.
+- Company is **Onsano GmbH i. Gr.** (notarised 2 Sept 2026, Sitz Berlin, HR registration at AG Charlottenburg pending). Impressum/Datenschutz use the real entity details; add the HRB number and USt-IdNr. once assigned, and drop "i. Gr." after registration.
 
 ## Integrations
 - All booking CTAs open the Cal.com modal for `david-alesch/30min`, loaded on demand by `Booking.astro`. Do not open a separate page during the normal interaction.
