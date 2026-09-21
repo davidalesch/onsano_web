@@ -53,8 +53,11 @@ existing routes. All new marketing and demo text is localised.
 ## Interactions
 
 Demos run entirely in the browser. No uploads, model calls, or patient data.
-Each has query/finding → evidence/position → draft states, a source disclosure,
-and reset. They are explicitly labelled as synthetic illustrations.
+The MD demo follows query → document review and selection → simulated sending
+confirmation, listing only selected documents. Its medical previews contain
+structured synthetic discharge and progress notes. The Widerspruch demo follows
+finding → evidence/position → draft, with clearly fictional rule identifiers.
+Both include source previews and reset, and are labelled as synthetic illustrations.
 
 Decorative hero motion stops after 4.5 seconds. Section reveals play once.
 Reduced motion disables the animation. Native scrolling and visible-by-default

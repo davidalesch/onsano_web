@@ -9,6 +9,7 @@ import {
   ArrowUpRight,
 } from "lucide-astro";
 import { productCopy } from "../i18n/product";
+import { demoCopy } from "../i18n/demo";
 import type { Lang } from "../i18n/ui";
 const { lang = "en", kind = "md" } = Astro.props as {
   lang: Lang;
@@ -16,6 +17,25 @@ const { lang = "en", kind = "md" } = Astro.props as {
 };
 const c = productCopy(lang);
 const ob = kind === "ob";
+const d = demoCopy(lang);
+const documents = [
+  {
+    title: c.record,
+    sections: [
+      [d.diagnosis, d.diagnosisText],
+      [d.course, d.courseText],
+      [d.discharge, d.dischargeText],
+    ],
+  },
+  {
+    title: c.record2,
+    sections: [
+      [d.assessment, d.assessmentText],
+      [d.nursing, d.nursingText],
+      [d.plan, d.planText],
+    ],
+  },
+];
 ---
 
 <div class:list={["product-demo", { "is-objection": ob }]} data-demo>
@@ -33,11 +53,11 @@ const ob = kind === "ob";
     </span>
     <i></i>
     <span>
-      02 <span>{c.evidenceStep}</span>
+      02 <span>{ob ? c.evidenceStep : d.review}</span>
     </span>
     <i></i>
     <span>
-      03 <span>{c.draftStep}</span>
+      03 <span>{ob ? c.draftStep : d.sentStep}</span>
     </span>
   </div>
   <div class="demo-stage" aria-live="polite">
@@ -47,16 +67,20 @@ const ob = kind === "ob";
       </div>
       <p class="demo-eyebrow">{ob ? c.finding : c.query}</p>
       <h4>{ob ? c.findingText : c.queryText}</h4>
-      <div class="document-row">
-        <FileText size={17} />
-        <span>{c.record}</span>
-        <span>PDF</span>
-      </div>
-      <div class="document-row">
-        <FileText size={17} />
-        <span>{c.record2}</span>
-        <span>PDF</span>
-      </div>
+      {ob && (
+        <>
+          <div class="document-row">
+            <FileText size={17} />
+            <span>{c.record}</span>
+            <span>PDF</span>
+          </div>
+          <div class="document-row">
+            <FileText size={17} />
+            <span>{c.record2}</span>
+            <span>PDF</span>
+          </div>
+        </>
+      )}
       <button class="demo-action" data-next>
         <Search size={16} />
         {ob ? c.evaluate : c.run}
@@ -70,42 +94,111 @@ const ob = kind === "ob";
           {ob ? c.argument : c.results}
         </span>
         <p>{ob ? c.argumentText : c.resultText}</p>
-        <button class="source-link" data-source aria-expanded="false">
-          {c.source} [1] <ArrowUpRight size={14} />
-        </button>
+        {ob && (
+          <button class="source-link" data-source="1" aria-expanded="false">
+            {c.source} [1] <ArrowUpRight size={14} />
+          </button>
+        )}
       </div>
+      {!ob && (
+        <div class="document-choices">
+          {documents.map((document, i) => (
+            <div class="document-choice">
+              <button
+                class="document-preview"
+                data-source={i}
+                aria-expanded="false"
+              >
+                <FileText size={18} />
+                <span>
+                  {document.title}
+                  <small>PDF · {i === 0 ? "15.05.2026" : "14.05.2026"}</small>
+                </span>
+                <ArrowUpRight size={15} />
+              </button>
+              <label>
+                <input type="checkbox" data-document={i} checked />
+                {d.include}
+                <span class="sr-only">: {document.title}</span>
+              </label>
+            </div>
+          ))}
+        </div>
+      )}
       <div class="evidence-gap">
-        <span class="mini-label">{ob ? c.rule : c.gap}</span>
-        <p>{ob ? c.ruleText : c.gapText}</p>
+        <span class="mini-label">{ob ? d.rules : c.gap}</span>
+        <p>{ob ? d.ruleText : c.gapText}</p>
+        {ob && <small class="rule-caption">{d.fictional}</small>}
       </div>
-      <button class="demo-action" data-next>
-        {ob ? c.objectionDraft : c.draft}
+      {!ob && (
+        <p class="selection-hint" data-selection-hint hidden>
+          {d.select}
+        </p>
+      )}
+      <button class="demo-action" data-next data-send={!ob ? "" : undefined}>
+        {ob ? c.objectionDraft : d.send}
         <ArrowRight size={17} />
       </button>
     </div>
     <div data-step="2" hidden>
       <span class="mini-label draft-label">
         <Check size={15} />
-        {c.ready}
+        {ob ? c.ready : d.sent}
       </span>
-      <div class="draft-paper">
-        <FileText size={23} />
-        <p>{ob ? c.objectionText : c.readyText}</p>
-        <button class="source-link" data-source aria-expanded="false">
-          {c.source} [1] <ArrowUpRight size={14} />
-        </button>
-      </div>
+      {ob ? (
+        <div class="draft-paper">
+          <FileText size={23} />
+          <p>{ob ? c.objectionText : c.readyText}</p>
+          <button class="source-link" data-source="1" aria-expanded="false">
+            {c.source} [1] <ArrowUpRight size={14} />
+          </button>
+        </div>
+      ) : (
+        <div class="sent-confirmation">
+          <p>{d.confirmation}</p>
+          <ul>
+            {documents.map((document, i) => (
+              <li data-sent-document={i}>
+                <Check size={17} />
+                <span>{document.title}</span>
+                <small>PDF</small>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <button class="demo-action secondary" data-reset>
         <RotateCcw size={16} />
         {c.again}
       </button>
     </div>
-    <aside class="source-panel" hidden>
-      <span class="mini-label">[1] {c.sourceTitle}</span>
-      <blockquote>{c.sourceText}</blockquote>
-      <button class="source-link" data-close-source>
-        {c.closeSource} ×
-      </button>
+    <aside
+      class="source-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-label={c.source}
+      hidden
+    >
+      <div class="source-toolbar">
+        <span>{d.clinic}</span>
+        <button class="source-link" data-close-source>
+          {c.closeSource} ×
+        </button>
+      </div>
+      <div class="medical-document" tabindex="0">
+        <p class="medical-meta">{d.patient}</p>
+        {documents.map((document, i) => (
+          <article data-source-document={i} hidden>
+            <h4>{document.title}</h4>
+            {document.sections.map(([title, text]) => (
+              <section>
+                <h5>{title}</h5>
+                <p>{text}</p>
+              </section>
+            ))}
+          </article>
+        ))}
+      </div>
     </aside>
   </div>
   <div class="demo-caption">
@@ -116,6 +209,23 @@ const ob = kind === "ob";
 <script>
   document.querySelectorAll<HTMLElement>("[data-demo]").forEach((demo) => {
     let step = 0;
+    let sourceTrigger: HTMLButtonElement | null = null;
+    const selections = [
+      ...demo.querySelectorAll<HTMLInputElement>("[data-document]"),
+    ];
+    const send = demo.querySelector<HTMLButtonElement>("[data-send]");
+    const updateSelection = () => {
+      const empty = selections.every((input) => !input.checked);
+      if (send) send.disabled = empty;
+      const hint = demo.querySelector<HTMLElement>("[data-selection-hint]");
+      if (hint) hint.hidden = !empty;
+      demo
+        .querySelectorAll<HTMLElement>("[data-sent-document]")
+        .forEach((el, i) => (el.hidden = !selections[i].checked));
+    };
+    selections.forEach((input) =>
+      input.addEventListener("change", updateSelection),
+    );
     const source = demo.querySelector<HTMLElement>(".source-panel")!;
     const closeSource = () => {
       source.hidden = true;
@@ -141,17 +251,33 @@ const ob = kind === "ob";
     };
     demo.querySelectorAll("[data-next]").forEach((button) =>
       button.addEventListener("click", () => {
+        if (
+          button.hasAttribute("data-send") &&
+          !selections.some((input) => input.checked)
+        )
+          return;
+        updateSelection();
         step = Math.min(step + 1, 2);
         render();
       }),
     );
     demo.querySelector("[data-reset]")?.addEventListener("click", () => {
+      selections.forEach((input) => (input.checked = true));
+      updateSelection();
       step = 0;
       render();
     });
     demo.querySelectorAll("[data-source]").forEach((button) =>
       button.addEventListener("click", () => {
-        source.hidden = !source.hidden;
+        sourceTrigger = button as HTMLButtonElement;
+        source
+          .querySelectorAll<HTMLElement>("[data-source-document]")
+          .forEach(
+            (el) =>
+              (el.hidden =
+                el.dataset.sourceDocument !== sourceTrigger!.dataset.source),
+          );
+        source.hidden = false;
         demo
           .querySelectorAll<HTMLElement>("[data-step]")
           .forEach((el) => (el.inert = !source.hidden));
@@ -164,18 +290,26 @@ const ob = kind === "ob";
     );
     demo.querySelector("[data-close-source]")?.addEventListener("click", () => {
       closeSource();
-      demo
-        .querySelector<HTMLButtonElement>(`[data-step="${step}"] [data-source]`)
-        ?.focus({ preventScroll: true });
+      sourceTrigger?.focus({ preventScroll: true });
     });
     demo.addEventListener("keydown", (e) => {
+      if (e.key === "Tab" && !source.hidden) {
+        const close = source.querySelector<HTMLButtonElement>(
+          "[data-close-source]",
+        )!;
+        const document =
+          source.querySelector<HTMLElement>(".medical-document")!;
+        if (
+          (!e.shiftKey && window.document.activeElement === document) ||
+          (e.shiftKey && window.document.activeElement === close)
+        ) {
+          e.preventDefault();
+          (e.shiftKey ? document : close).focus({ preventScroll: true });
+        }
+      }
       if (e.key === "Escape" && !source.hidden) {
         closeSource();
-        demo
-          .querySelector<HTMLButtonElement>(
-            `[data-step="${step}"] [data-source]`,
-          )
-          ?.focus({ preventScroll: true });
+        sourceTrigger?.focus({ preventScroll: true });
       }
     });
   });
