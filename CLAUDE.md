@@ -24,10 +24,9 @@ Shared palette and legacy tokens live in **`src/styles/global.css`**. Redesign l
 - Body text near-black `#0b0f14`; muted `#4c5c70`.
 
 ## Logo
-- Components: `LogoMark.astro` (two squares, animatable) and `Logo.astro` (full lockup, wordmark as **outlines** — font-independent). Both `currentColor`; tint with a `text-*` class.
-- Web variants: **blue** (primary) and **light-green**. **Black is email-signature only** — the only web exception is the very bottom footer end-cap.
-- **Do NOT use the dark/muted-green logo** (PDF pages 7–8).
-- The mark = two overlapping rounded squares = "an intelligence layer on top of an existing system." **Derive every abstract visual on the site from this mark** (layering, offset, filled-vs-outline). Do not invent a new motif or drop a different generic icon per section.
+- Use the September 2026 SVGs supplied by the user in `public/brand`: blue wordmark, blue standalone mark, and white-on-blue tile.
+- `Logo.astro` renders the official wordmark; `LogoMark.astro` renders the standalone mark or tile. Preserve their artwork and colours.
+- The supplied connected diamond mark replaces the old overlapping-square logo throughout the site, including the favicon.
 
 ## Voice
 Optimistic, informed, no-bs/factual. Short, concise, slightly confident sentences. NOT generic, bland, or overconfident. German regulatory terms + English tech terms both fine.
@@ -40,7 +39,7 @@ Optimistic, informed, no-bs/factual. Short, concise, slightly confident sentence
 - Company is **not incorporated yet** → Impressum/Datenschutzerklärung are placeholder scaffolds until real entity details exist.
 
 ## Integrations
-- Booking CTAs link to `https://cal.com/david-alesch/30min`. The September redesign uses direct navigation after the existing iframe stalled in browser verification.
+- All booking CTAs open the Cal.com modal for `david-alesch/30min`, loaded on demand by `Booking.astro`. Do not open a separate page during the normal interaction.
 - Analytics = Google Analytics, **consent-gated** (must not load before the user accepts the cookie banner); disclose in Datenschutzerklärung.
 
 ## Sections (order)

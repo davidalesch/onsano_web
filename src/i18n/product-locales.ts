@@ -59,7 +59,7 @@ export const fr = {
     "Rapprocher dossier et règles pertinentes",
     "Défendre ce qui est étayé. Reconnaître les limites.",
   ],
-  try: "Essayer la démo",
+  try: "Réserver une démo",
   illustrative: "Exemple interactif · données synthétiques",
   case: "Cas fictif / 024",
   query: "Demande du MD",
@@ -98,7 +98,7 @@ export const fr = {
   steps: [
     [
       "Rassembler le dossier",
-      "Commencez par la demande, la documentation du cas et la correspondance pertinente.",
+      "Connectez votre KIS et LE-Portal pour réunir les documents du cas et la correspondance de contrôle.",
     ],
     [
       "Confier le travail préparatoire",
@@ -225,7 +225,7 @@ export const nl = {
     "Breng het dossier en relevante regels samen",
     "Verdedig wat onderbouwd is. Erken de grenzen.",
   ],
-  try: "Probeer de demo",
+  try: "Plan een demo",
   illustrative: "Interactief voorbeeld · synthetische gegevens",
   case: "Voorbeeldcasus / 024",
   query: "MD-vraag",
@@ -265,7 +265,7 @@ export const nl = {
   steps: [
     [
       "Breng de casus samen",
-      "Begin met de vraag, de casusdocumentatie en de relevante controlecorrespondentie.",
+      "Verbind uw KIS en LE-Portal om casusdocumenten en controlecorrespondentie samen te brengen.",
     ],
     [
       "Laat agents het voorwerk doen",
@@ -391,7 +391,7 @@ export const it = {
     "Unire cartella e regole pertinenti",
     "Difendere ciò che è fondato. Riconoscere i limiti.",
   ],
-  try: "Prova la demo",
+  try: "Prenota una demo",
   illustrative: "Esempio interattivo · dati sintetici",
   case: "Caso di esempio / 024",
   query: "Richiesta del MD",
@@ -431,7 +431,7 @@ export const it = {
   steps: [
     [
       "Riunire il caso",
-      "Partite dalla richiesta, dalla documentazione e dalla corrispondenza pertinente.",
+      "Collegate KIS e LE-Portal per riunire i documenti del caso e la corrispondenza di verifica.",
     ],
     [
       "Affidare il lavoro preparatorio",
@@ -558,7 +558,7 @@ export const es = {
     "Reunir el expediente y las reglas pertinentes",
     "Defender lo respaldado. Reconocer los límites.",
   ],
-  try: "Probar la demo",
+  try: "Reservar una demo",
   illustrative: "Ejemplo interactivo · datos sintéticos",
   case: "Caso de ejemplo / 024",
   query: "Consulta del MD",
@@ -598,7 +598,7 @@ export const es = {
   steps: [
     [
       "Reunir el caso",
-      "Comience con la consulta, la documentación del caso y la correspondencia pertinente.",
+      "Conecte su KIS y LE-Portal para reunir los documentos del caso y la correspondencia de auditoría.",
     ],
     [
       "Delegar el trabajo preparatorio",

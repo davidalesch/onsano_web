@@ -68,7 +68,7 @@ const en = {
     "Bring the record and relevant rules together",
     "Challenge what is supported. Recognise what is not.",
   ],
-  try: "Try the demo",
+  try: "Book a demo",
   illustrative: "Interactive example · synthetic data",
   case: "Example case / 024",
   query: "MD query",
@@ -105,7 +105,7 @@ const en = {
   steps: [
     [
       "Bring the case together",
-      "Start with the query, the case documentation, and the relevant audit correspondence.",
+      "Connect to your KIS and LE-Portal to bring case records and audit correspondence together.",
     ],
     [
       "Let the agents do the groundwork",
@@ -231,7 +231,7 @@ const de: typeof en = {
     "Fallakte und relevante Regeln zusammenführen",
     "Belegtes verteidigen. Grenzen der Evidenz erkennen.",
   ],
-  try: "Demo ausprobieren",
+  try: "Demo ausmachen",
   illustrative: "Interaktives Beispiel · synthetische Daten",
   case: "Beispielfall / 024",
   query: "MD-Anfrage",
@@ -271,7 +271,7 @@ const de: typeof en = {
   steps: [
     [
       "Den Fall zusammenführen",
-      "Ausgangspunkt sind die Anfrage, die Falldokumentation und die relevante Prüfkorrespondenz.",
+      "Wir binden KIS und LE-Portal an, um Fallunterlagen und Prüfkorrespondenz zusammenzuführen.",
     ],
     [
       "Die Vorarbeit übernehmen lassen",

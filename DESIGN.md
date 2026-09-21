@@ -6,8 +6,9 @@ Updated 21 September 2026 for the requested full website redesign.
 
 A professional, distinctive hospital revenue-protection site, informed by
 Ditto Care's clear storytelling, generous typography, soft surfaces, and simple
-motion. The visual identity remains Onsano's: overlapping documents and the
-two-square mark connect the record, the evidence, and the human decision.
+motion. The supplied September 2026 Onsano wordmark and connected diamond mark
+anchor the brand; overlapping documents connect the record, the evidence, and
+the human decision. Official SVG assets are kept in `public/brand`.
 
 Warm ivory, deep blue, sage, and restrained lilac replace the previous white/blue
 section system. Self-hosted Manrope and Inter provide the type system. Palette
@@ -59,9 +60,12 @@ Decorative hero motion stops after 4.5 seconds. Section reveals play once.
 Reduced motion disables the animation. Native scrolling and visible-by-default
 content work without the animation script.
 
-Booking links open the existing `cal.com/david-alesch/30min` page directly.
-The old embedded calendar stalled during browser verification; direct booking
-was verified to render and avoids loading a third-party SDK on page arrival. Analytics remains consent-gated.
+All booking CTAs, including the product-section “Demo ausmachen” links, open
+the official Cal.com modal for `david-alesch/30min`. The SDK loads on the first
+click and uses a single default namespace with an explicit calendar origin.
+The desktop hero has one “Agenten entdecken” link, inside the illustration.
+Workflow step 1 mentions KIS and LE-Portal connectivity, as supplied by the user.
+Analytics remains consent-gated.
 The cookie banner is not shown while its measurement ID is a placeholder.
 
 ## Existing release dependencies

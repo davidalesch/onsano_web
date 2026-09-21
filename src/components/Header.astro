@@ -50,8 +50,8 @@ const links = [
       </details>
       <a
         href="https://cal.com/david-alesch/30min"
-        target="_blank"
-        rel="noopener noreferrer"
+        data-booking
+        aria-haspopup="dialog"
         class="header-book"
       >
         {c.book}
@@ -65,7 +65,11 @@ const links = [
           {links.map((l) => (
             <a href={`${home}#${l.id}`}>{l.label}</a>
           ))}
-          <a href={`${home}#contact`}>
+          <a
+            href="https://cal.com/david-alesch/30min"
+            data-booking
+            aria-haspopup="dialog"
+          >
             {c.book}
             <ArrowUpRight size={15} />
           </a>
@@ -101,7 +105,7 @@ const links = [
     display: block;
   }
   .brand-link :global(.logo) {
-    height: 29px;
+    height: 44px;
   }
   .desktop-nav {
     display: flex;
@@ -224,7 +228,7 @@ const links = [
       gap: 10px;
     }
     .brand-link :global(.logo) {
-      height: 25px;
+      height: 38px;
     }
   }
   @media (max-width: 480px) {

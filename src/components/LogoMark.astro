@@ -1,35 +1,22 @@
 ---
-/**
- * Onsano mark: two overlapping rounded squares ("an intelligence layer sitting
- * on top of an existing system"). currentColor tinted. The front square's stroke
- * is painted in --logo-gap (= section background) to carve the separation notch.
- * Geometry normalised to a 0–150 viewBox so the two squares animate independently.
- */
+/** Official standalone mark and white-on-blue tile supplied with the new brand. */
 interface Props {
   class?: string;
   title?: string;
+  variant?: "mark" | "tile";
 }
-const { class: className = '', title } = Astro.props;
+const { class: className = "", title = "", variant = "mark" } = Astro.props;
 ---
-<svg
+
+<img
+  src={
+    variant === "tile"
+      ? "/brand/onsano-mark-tile.svg"
+      : "/brand/onsano-mark.svg"
+  }
+  width={variant === "tile" ? 406 : 381}
+  height={variant === "tile" ? 400 : 270}
   class={className}
-  viewBox="0 0 150 148"
-  fill="none"
-  xmlns="http://www.w3.org/2000/svg"
-  role={title ? 'img' : undefined}
-  aria-hidden={title ? undefined : 'true'}
->
-  {title && <title>{title}</title>}
-  <!-- back square: outline -->
-  <rect
-    class="mark-back"
-    x="5.2" y="37.9" width="100.8" height="100.8" rx="26"
-    fill="none" stroke="currentColor" stroke-width="5.6"
-  />
-  <!-- front square: filled, with a background-coloured gap stroke -->
-  <rect
-    class="mark-front"
-    x="39" y="6" width="108" height="108" rx="29"
-    fill="currentColor" stroke="var(--logo-gap, #fff)" stroke-width="5.5"
-  />
-</svg>
+  alt={title}
+  decoding="async"
+/>

@@ -45,8 +45,8 @@ const trustIcons = [UserCheck, ScanLine, Fingerprint, ShieldCheck];
         <a
           class="pill primary"
           href={booking}
-          target="_blank"
-          rel="noopener noreferrer"
+          data-booking
+          aria-haspopup="dialog"
         >
           {c.book}
           <span>
@@ -91,7 +91,7 @@ const trustIcons = [UserCheck, ScanLine, Fingerprint, ShieldCheck];
       <div class="trail-card intelligence-card">
         <span class="card-kicker">02 / {c.trail[1]}</span>
         <div class="intelligence-mark">
-          <LogoMark />
+          <LogoMark variant="tile" />
         </div>
         <strong>{c.evidence}</strong>
         <p>{c.evidenceBody}</p>
@@ -125,10 +125,6 @@ const trustIcons = [UserCheck, ScanLine, Fingerprint, ShieldCheck];
     </div>
     <div class="hero-foot">
       <span>{c.heroNote}</span>
-      <a href="#products">
-        {c.demo}
-        <ArrowDown size={15} />
-      </a>
     </div>
   </section>
   <section id="problem" class="problem-section section-wrap">
@@ -172,7 +168,7 @@ const trustIcons = [UserCheck, ScanLine, Fingerprint, ShieldCheck];
             </li>
           ))}
         </ul>
-        <a href="#md-demo" class="text-link">
+        <a href={booking} class="text-link" data-booking aria-haspopup="dialog">
           {c.try}
           <ArrowRight size={17} />
         </a>
@@ -196,7 +192,7 @@ const trustIcons = [UserCheck, ScanLine, Fingerprint, ShieldCheck];
             </li>
           ))}
         </ul>
-        <a href="#ob-demo" class="text-link">
+        <a href={booking} class="text-link" data-booking aria-haspopup="dialog">
           {c.try}
           <ArrowRight size={17} />
         </a>
@@ -278,8 +274,8 @@ const trustIcons = [UserCheck, ScanLine, Fingerprint, ShieldCheck];
       <a
         class="pill primary"
         href={booking}
-        target="_blank"
-        rel="noopener noreferrer"
+        data-booking
+        aria-haspopup="dialog"
       >
         {c.book}
         <span>
