@@ -600,6 +600,13 @@ body {
 .demo-stage > [data-step] {
   animation: demo-enter 0.3s ease-out;
 }
+.product-demo:not(.is-objection) .demo-stage {
+  display: flex;
+  flex-direction: column;
+}
+.product-demo:not(.is-objection) .demo-stage > [data-step="0"] {
+  margin-block: auto;
+}
 .file-icon {
   display: grid;
   place-items: center;

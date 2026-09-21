@@ -125,11 +125,13 @@ const documents = [
           ))}
         </div>
       )}
-      <div class="evidence-gap">
-        <span class="mini-label">{ob ? d.rules : c.gap}</span>
-        <p>{ob ? d.ruleText : c.gapText}</p>
-        {ob && <small class="rule-caption">{d.fictional}</small>}
-      </div>
+      {ob && (
+        <div class="evidence-gap">
+          <span class="mini-label">{d.rules}</span>
+          <p>{d.ruleText}</p>
+          <small class="rule-caption">{d.fictional}</small>
+        </div>
+      )}
       {!ob && (
         <p class="selection-hint" data-selection-hint hidden>
           {d.select}

@@ -82,8 +82,6 @@ const en = {
     "Day 3: continued inpatient monitoring and treatment are documented. Discharge was planned following reassessment.",
   results: "Evidence located",
   resultText: "Treatment notes document continued monitoring on day 3.",
-  gap: "For your attention",
-  gapText: "The reason for day 4 is not evidenced in the available record.",
   draft: "Prepare response",
   ready: "Draft for human review",
   readyText:
@@ -246,9 +244,6 @@ const de: typeof en = {
   results: "Belege gefunden",
   resultText:
     "Die Verlaufsdokumentation belegt die fortgesetzte Überwachung an Tag 3.",
-  gap: "Bitte beachten",
-  gapText:
-    "Der Grund für Tag 4 ist in den verfügbaren Unterlagen nicht belegt.",
   draft: "Antwort vorbereiten",
   ready: "Entwurf zur fachlichen Prüfung",
   readyText:
