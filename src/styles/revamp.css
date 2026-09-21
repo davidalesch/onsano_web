@@ -270,19 +270,21 @@ body {
 .intelligence-mark {
   width: 78px;
   height: 78px;
-  background: var(--ink);
+  background: #03203c;
   border-radius: 24px;
+  overflow: hidden;
   display: grid;
   place-items: center;
   margin: 0 auto 15px;
   box-shadow:
     0 0 0 12px #ffffff20,
     0 0 0 25px #ffffff15;
-  --logo-gap: var(--ink);
 }
 .intelligence-mark img {
+  display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 .intelligence-card strong {
   font-size: 17px;
