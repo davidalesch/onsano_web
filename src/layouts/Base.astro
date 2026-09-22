@@ -64,7 +64,7 @@ const { title, description, lang = 'en' } = Astro.props;
     <CookieConsent lang={lang} />
 
     <!-- This runs synchronously after the page has its full height but before
-         deferred modules, including Lenis, initialise. -->
+         deferred modules initialise. -->
     <script is:inline>
       (() => {
         const root = document.documentElement;
@@ -89,11 +89,11 @@ const { title, description, lang = 'en' } = Astro.props;
       })();
     </script>
 
-    <!-- Smooth scroll (Lenis) + scroll-reveal. Progressive enhancement:
-         nothing here is required for content to be visible/accessible. -->
+    <!-- Scroll-reveal. Progressive enhancement: nothing here is required for
+         content to be visible/accessible. Scrolling itself is native: a
+         smooth-scroll library (Lenis) used to animate the wheel, which kept
+         the page gliding after fingers landed back on a trackpad. -->
     <script>
-      import Lenis from 'lenis';
-
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const supportsIO = 'IntersectionObserver' in window;
 
@@ -121,31 +121,6 @@ const { title, description, lang = 'en' } = Astro.props;
               if (r.top < window.innerHeight) el.classList.add('is-visible');
             });
         }, 2500);
-
-        // Buttery inertia scroll
-        const lenis = new Lenis({
-          duration: 1.1,
-          easing: (t) => 1 - Math.pow(1 - t, 3), // ease-out cubic, no bounce
-        });
-        const raf = (time: number) => {
-          lenis.raf(time);
-          requestAnimationFrame(raf);
-        };
-        requestAnimationFrame(raf);
-
-        // In-page anchor links scroll smoothly through Lenis
-        document.querySelectorAll('a[href^="#"]').forEach((a) => {
-          a.addEventListener('click', (ev) => {
-            const href = a.getAttribute('href');
-            if (href && href.length > 1) {
-              const target = document.querySelector(href);
-              if (target) {
-                ev.preventDefault();
-                lenis.scrollTo(target as HTMLElement, { offset: -72 });
-              }
-            }
-          });
-        });
       }
     </script>
 

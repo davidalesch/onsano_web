@@ -45,3 +45,10 @@ Optimistic, informed, no-bs/factual. Short, concise, slightly confident sentence
 
 ## Sections (order)
 1 Hero · 2 Problem · 3 Approach (abstract) · 4 Compliance · 5 Contact · 6 Impressum · 7 Datenschutzerklärung.
+
+## Loss estimator (`/loss-estimator/`, `/de/verlustrechner/`)
+Public, EN + DE only (other locales link to EN). Uses the gated `/dashboard`'s loss method with no
+hospital data in it: the reader enters audits (or beds) and the 2026 unbeanstandete Quote. It follows
+the **dashboard's** visual language (paper ground, white cards, mono figures, tier chips; red = loss,
+green = potential), not the landing page's. Every published figure and the +20 pp improvement scenario
+live, with sources, in `src/lib/loss-model.ts` — change numbers there only. Copy: `src/i18n/estimator.ts`.
