@@ -38,6 +38,7 @@ body {
   display: none !important;
 }
 .new-home section[id],
+.new-home article[id],
 .demo-surround {
   scroll-margin-top: 105px;
 }

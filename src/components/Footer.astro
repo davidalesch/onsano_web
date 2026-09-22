@@ -20,6 +20,9 @@ const home = lang === "en" ? "/" : `/${lang}/`;
       <a href={`${home}#md-agent`}>{c.md}</a>
       <a href={`${home}#widerspruch-agent`}>{c.objection}</a>
       <a href={`${home}#compliance`}>{c.trust}</a>
+      <a href={lang === "de" ? "/de/verlustrechner/" : "/loss-estimator/"}>
+        {lang === "de" ? "Verlustrechner" : "Loss estimator"}
+      </a>
     </nav>
     <div class="footer-contact">
       <span>{c.footerConversation}</span>

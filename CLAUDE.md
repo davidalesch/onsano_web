@@ -44,3 +44,7 @@ Optimistic, informed, no-bs/factual. Short, concise, slightly confident sentence
 
 ## Sections (order)
 1 Hero · 2 Problem · 3 Products and demos · 4 Workflow · 5 Trust · 6 FAQ · 7 Contact · 8 Footer/legal links.
+
+## Additional pages
+- The public loss estimator lives at `/loss-estimator/` and `/de/verlustrechner/`. Its sourced constants and calculation model live in `src/lib/loss-model.ts`; keep numerical changes centralized there.
+- The password-gated hospital dashboard lives at `/dashboard`. Its standalone application source is `src/standalone/dashboard.html`, with current-site theme overrides in `public/dashboard-theme.css`.

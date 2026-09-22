@@ -1,0 +1,7 @@
+---
+// An Astro route makes /dashboard available in development and static builds.
+// Production access remains gated by the root dashboard middleware.
+import dashboard from "../standalone/dashboard.html?raw";
+---
+
+<Fragment set:html={dashboard} />
