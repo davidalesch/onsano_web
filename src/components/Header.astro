@@ -7,6 +7,8 @@ const { lang } = Astro.props as { lang: Lang };
 const c = productCopy(lang);
 const home = lang === "en" ? "/" : `/${lang}/`;
 const pathname = Astro.url.pathname.replace(/\/+$/, "");
+const estimator =
+  pathname === "/de/verlustrechner" || pathname === "/loss-estimator";
 const legal = pathname.endsWith("/impressum")
   ? "impressum/"
   : pathname.endsWith("/datenschutz")
@@ -41,7 +43,13 @@ const links = [
             .map(([code, name]) => (
               <a
                 lang={code}
-                href={`${code === "en" ? "/" : `/${code}/`}${legal}`}
+                href={
+                  estimator && (code === "en" || code === "de")
+                    ? code === "de"
+                      ? "/de/verlustrechner/"
+                      : "/loss-estimator/"
+                    : `${code === "en" ? "/" : `/${code}/`}${legal}`
+                }
               >
                 {name}
               </a>

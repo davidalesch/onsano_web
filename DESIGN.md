@@ -75,4 +75,9 @@ The cookie banner is not shown while its measurement ID is a placeholder.
 
 Legal pages contain pre-existing company/provider placeholders. They need real
 entity information before a public launch. The redesign does not invent it.
-The password-gated dashboard and hosting middleware are outside this change.
+The Verlustrechner is available at `/de/verlustrechner/` and `/loss-estimator/`,
+linked from the footer, using the existing loss model. The hospital dashboard
+is served by an Astro route at `/dashboard`; its self-contained source lives
+in `src/standalone/dashboard.html`, with the site theme in `public/dashboard-theme.css`.
+The dashboard has no footer link. The existing Vercel password middleware still
+protects `/dashboard` in deployment; Astro's local dev server does not run it.

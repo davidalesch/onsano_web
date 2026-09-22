@@ -1,0 +1,129 @@
+/* Shared visual language with the marketing site; data and interactions unchanged. */
+html[data-theme="light"] {
+  --paper: #faf9f5;
+  --paper-raised: #fffefa;
+  --paper-sunken: #f0f2ec;
+  --ink: #192f43;
+  --ink-muted: #5b6e76;
+  --ink-faint: #65757a;
+  --line: #dce1de;
+  --line-strong: #b9c8bf;
+  --accent: #345c4b;
+  --accent-bright: #345c4b;
+  --accent-wash: #e7eee2;
+  --good-wash: #e7eee2;
+  --radius: 20px;
+  --radius-lg: 26px;
+  --radius-sm: 14px;
+}
+html body #app {
+  max-width: 1440px;
+  padding: 0 48px 24px;
+}
+html .dashboard-brandbar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 80px;
+  border-bottom: 1px solid var(--line);
+}
+.dashboard-brandbar img {
+  display: block;
+  width: 145px;
+  height: auto;
+}
+.dashboard-brandbar > span {
+  font-size: 11px;
+  color: var(--ink-muted);
+  letter-spacing: 0.08em;
+}
+html .masthead {
+  padding: 30px 28px;
+  margin: 24px 0 10px;
+  border: 0;
+  border-radius: 24px;
+  background: linear-gradient(120deg, #e5ecdf, #e6edf0);
+}
+html h1.title {
+  font-size: clamp(30px, 3.4vw, 46px);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+}
+html .eyebrow {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+}
+html .masthead-title-block {
+  gap: 12px;
+}
+html .masthead .lang-toggle {
+  top: 20px;
+  right: 24px;
+}
+html .masthead-meta {
+  padding-top: 25px;
+}
+html .filter-bar {
+  gap: 12px;
+  padding: 10px 0;
+}
+html .search-input,
+html select.filter-select {
+  padding: 12px 14px;
+}
+html .table-scroll {
+  box-shadow: 0 10px 30px #192f4308;
+}
+html body.is-targets-view #view-targets.active {
+  min-height: 420px;
+}
+html .target-table th {
+  background: #edf1e9;
+}
+html .target-table tbody tr:hover {
+  background: #edf1e9;
+}
+html .hospital-panel {
+  margin-top: 8px;
+}
+html .stat-row {
+  gap: 12px;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+}
+html .stat-tile {
+  border-radius: 18px;
+  border: 1px solid var(--line);
+}
+html .footer-note {
+  border-top-color: var(--line);
+  padding-top: 14px;
+}
+@media (max-width: 760px) {
+  html body #app {
+    padding: 0 20px 20px;
+  }
+  html .dashboard-brandbar {
+    min-height: 70px;
+  }
+  .dashboard-brandbar img {
+    width: 125px;
+  }
+  .dashboard-brandbar > span {
+    font-size: 9px;
+  }
+  html .masthead {
+    padding: 52px 20px 24px;
+    margin-top: 18px;
+  }
+  html .masthead-meta {
+    padding-top: 0;
+    text-align: left;
+  }
+  html .subtitle {
+    font-size: 13px;
+  }
+}

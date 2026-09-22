@@ -1,0 +1,13 @@
+---
+import Base from "../../layouts/Base.astro";
+import Estimator from "../../components/Estimator.astro";
+import { estimatorCopy } from "../../i18n/estimator";
+---
+
+<Base
+  lang="de"
+  title={estimatorCopy.de["meta.title"]}
+  description={estimatorCopy.de["meta.description"]}
+>
+  <Estimator lang="de" />
+</Base>
